@@ -73,14 +73,14 @@ if __name__ == '__main__':
     count_mean = pl_model.predict(delta_flattened, fitted_params)
     predicted_count_field = pl_model.sample(delta_flattened, fitted_params)
 
-    # plt.scatter(delta_flattened, count_mean + 1, label='fitted')
-    # plt.scatter(delta_flattened, galaxy_counts_flattened + 1, label='ground truth')
-    # plt.scatter(delta_flattened, predicted_count_field + 1, label='predict')
-    # plt.loglog()
-    # plt.xlim(1e-3, 1e3)
-    # plt.ylim(1, 1e2)
-    # plt.legend()
-    # plt.show()
+    plt.scatter(delta_flattened, count_mean + 1, label='fitted')
+    plt.scatter(delta_flattened, galaxy_counts_flattened + 1, label='ground truth')
+    plt.scatter(delta_flattened, predicted_count_field + 1, label='predict')
+    plt.loglog()
+    plt.xlim(1e-3, 1e3)
+    plt.ylim(1, 1e2)
+    plt.legend()
+    plt.show()
 
     k_truth, power_truth = compute_power_spectrum(BM.galaxy_counts, 25., kmin=1e-1, kmax=10.0)
     k_predict, power_predict = compute_power_spectrum(predicted_count_field.reshape(32, 32, 32), 25., kmin=1e-1,
