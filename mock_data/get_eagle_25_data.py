@@ -57,10 +57,20 @@ axarr[2].title.set_text("Galaxy counts")
 # plt.show()
 
 # Save to hdf5 file.
-with h5py.File("eagle_25_box.hdf5", "w") as f:
-    f.create_dataset("delta", data=H)
-    f.create_dataset("galaxy_counts", data=H_gal)
-    f.create_dataset("subhalo_counts", data=H_sub)
+with h5py.File("eagle_25_box_haloes.hdf5", "w") as f:
+    f.create_dataset("delta_field", data=H)
+    f.create_dataset("count_field", data=H_sub)
+    
+    # Header information.
+    g = f.create_group("Header")
+    g.attrs.create("BoxSize", bs)
+    g.attrs.create("GridSize", Ngrid)
+    g.attrs.create("GalaxyMassCut", 0.0)
+    g.attrs.create("SubHaloMassCut", 0.0)
+
+with h5py.File("eagle_25_box_galaxies.hdf5", "w") as f:
+    f.create_dataset("delta_field", data=H)
+    f.create_dataset("count_field", data=H_gal)
 
     # Header information.
     g = f.create_group("Header")
@@ -68,3 +78,4 @@ with h5py.File("eagle_25_box.hdf5", "w") as f:
     g.attrs.create("GridSize", Ngrid)
     g.attrs.create("GalaxyMassCut", 0.0)
     g.attrs.create("SubHaloMassCut", 0.0)
+
