@@ -1,6 +1,7 @@
 import h5py
 import numpy as np
 
+
 class BiasModelData:
 
     def __init__(self, fname, model_name="myModel"):
@@ -45,6 +46,7 @@ class BiasModelData:
                 self.count_field_truth = f['count_field_truth'][...]
                 print(f"Loaded count field truth shape={self.count_field_truth.shape}")
                 assert self.overdensity_field.shape == self.count_field_truth.shape
+
 
 if __name__ == '__main__':
     BM = BiasModelData("../mock_data/gadget_mock.hdf5")

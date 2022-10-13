@@ -25,7 +25,7 @@ def compute_power_spectrum(delta, Lbox, kmin=1e-3, kmax=1.0, Nk=32, logk=False, 
     Args:
         delta (np.array): if complex, it is expected to be the fourier representation directly, otherwise
              a FFT will be run first
-        Lbox (tuple of float or float):
+        Lbox (float):
         kmin (float, optional): Defaults to 1e-3 h/Mpc
         kmax (float, optional): Defaults to 1.0 h/Mpc
         Nk (int, optional): Defaults to 32.
@@ -39,8 +39,7 @@ def compute_power_spectrum(delta, Lbox, kmin=1e-3, kmax=1.0, Nk=32, logk=False, 
     N = N1, N2, N3
 
     Ntot = N1 * N2 * N3
-    if type(Lbox) is float:
-        Lbox = Lbox, Lbox, Lbox
+    Lbox = Lbox, Lbox, Lbox
 
     V = Lbox[0] * Lbox[1] * Lbox[2]
 
