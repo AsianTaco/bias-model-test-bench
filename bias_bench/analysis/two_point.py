@@ -2,19 +2,24 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-def plot_power_spectrum(BiasModelData, Lbox, kmin=1e-3, kmax=1.0, Nk=32, logk=False, normalize=True, even=True):
+def plot_power_spectrum(BiasModelData, Lbox, kmin=1e-1, kmax=10.0, Nk=32, logk=False, normalize=True):
 
     delta = BiasModelData.delta
-    gal_counts = BiasModelData.galaxy_counts
+    gal_counts = BiasModelData.galaxy_counts_flattened
+    meta = BiasModelData.model_name
 
-    k_density, power_density = compute_power_spectrum(delta, **meta)
-    k_counts, power_counts = compute_power_spectrum(gal_counts, **meta)
+    k_density, power_density = compute_power_spectrum(delta, Lbox, kmin=kmin, kmax=kmax, Nk=Nk, logk=logk, normalize=normalize)
+    k_counts, power_counts = compute_power_spectrum(gal_counts, Lbox, kmin=kmin, kmax=kmax, Nk=Nk, logk=logk, normalize=normalize)
 
-    plt.loglog(k_density, power_density)
-    plt.loglog(k_counts, power_counts)
+    plt.loglog(k_density, power_density, label="density")
+    plt.loglog(k_counts, power_counts, label='counts')
+    # TODO: Add ground truth plot
+    plt.legend()
+    plt.show()
 
 
-def compute_power_spectrum(delta, Lbox, kmin=1e-3, kmax=1.0, Nk=32, logk=False, normalize=True, even=True):
+# TODO: Find light-weight third-party power spectrum & bispectrum estimator
+def compute_power_spectrum(delta, Lbox, kmin=1e-3, kmax=1.0, Nk=32, logk=False, normalize=True):
     """Compute a 3d power spectrum from density contrast
 
     Args:
@@ -27,16 +32,10 @@ def compute_power_spectrum(delta, Lbox, kmin=1e-3, kmax=1.0, Nk=32, logk=False, 
         logk (bool, optional): Defaults to False
               *WARNING* logk=True needs checking
         normalize (bool, optional): Defaults to True. Apply proper normalization of the spectrum.
-        even (bool, optional): If delta is complex, one needs to know if the real representation has odd or even last dimension.
     """
     na = np.newaxis
 
     N1, N2, N3 = delta.shape
-    if delta.dtype == np.complex128:
-        if even:
-            N3 = (N3-1)*2
-        else:
-            N3 = (N3-1)*2+1
     N = N1, N2, N3
 
     Ntot = N1 * N2 * N3
@@ -53,19 +52,11 @@ def compute_power_spectrum(delta, Lbox, kmin=1e-3, kmax=1.0, Nk=32, logk=False, 
     k_n = np.sqrt(ik[0][:, na, na]**2 + ik[1][na, :, na]**2 +
                   ik[2][na, na, :]**2)
 
-    if delta.dtype == np.complex128:
-      delta_hat = delta
-    else:
-      delta_hat = np.fft.rfftn(delta) * (V / Ntot)
+    delta_hat = np.fft.rfftn(delta) * (V / Ntot)
 
-    if logk:
-        i_k_n = np.log10(k_n)
-        i_k_min = np.log10(kmin)
-        i_k_max = np.log10(kmax)
-    else:
-        i_k_n = k_n
-        i_k_min = kmin
-        i_k_max = kmax
+    i_k_n = k_n
+    i_k_min = kmin
+    i_k_max = kmax
 
     # TODO: Handle nyquist correctly
     Hw, _ = np.histogram(i_k_n, range=(i_k_min, i_k_max), bins=Nk)
@@ -79,10 +70,5 @@ def compute_power_spectrum(delta, Lbox, kmin=1e-3, kmax=1.0, Nk=32, logk=False, 
     if normalize:
       H /= V
     bc = 0.5 * (b[1:] + b[:-1])
-    if logk:
-        b = 10**b
-        bc = 10**bc
-        H = H / bc
-        raise ValueError("logk is not working")
 
     return bc, H

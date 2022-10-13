@@ -7,12 +7,14 @@ class BiasModelData:
         self.fname = fname
 
         self._load_bias_model_data()
+        self.model_name = 'supermodel'
 
     def _load_bias_model_data(self):
         with h5py.File(self.fname, "r") as f:
             self.delta = f['delta'][...]
             self.galaxy_counts = f['galaxy_counts'][...]
             self.subhalo_counts = f['subhalo_counts'][...]
+            # TODO: Read in meta data from h5 file
 
         print(self.delta.shape)
         print(self.galaxy_counts.shape)
