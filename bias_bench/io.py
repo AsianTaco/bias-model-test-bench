@@ -32,16 +32,19 @@ class BiasModelData:
             # The over density field (NxNxN)
             self.overdensity_field = f['delta_field'][...]
             print(f"Loaded overdensity field shape={self.overdensity_field.shape}")
+            assert np.all(self.overdensity_field.shape == self.info['GridSize'])
 
-            # Count field
+            # Count field (predicted)
+            if 'count_field' in f:
+                self.count_field = f['count_field'][...]
+                print(f"Loaded predicted count field shape={self.count_field.shape}")
+                assert self.overdensity_field.shape == self.count_field.shape
+
+            # Count field (truth)
             if 'count_field_truth' in f:
-                self.count_field = f['count_field_truth'][...]
-                print(f"Loaded count field truth shape={self.count_field.shape}")
-
-        # Checks
-        assert self.overdensity_field.shape == self.count_field.shape
-        assert np.all(self.count_field.shape == self.info['GridSize'])
-
+                self.count_field_truth = f['count_field_truth'][...]
+                print(f"Loaded count field truth shape={self.count_field_truth.shape}")
+                assert self.overdensity_field.shape == self.count_field_truth.shape
 
 if __name__ == '__main__':
-    BM = BiasModelData("../mock_data/eagle_25_box_galaxies.hdf5")
+    BM = BiasModelData("../mock_data/gadget_mock.hdf5")
