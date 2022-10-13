@@ -22,7 +22,7 @@ class BiasModelData:
         _required_header_params = ['BoxSize', 'GridSize']
 
         with h5py.File(self.fname, "r") as f:
-            # Read the meta data from the header
+            # Read the meta-data from the header
             for att in f['Header'].attrs.keys():
                 self.info[att] = f['Header'].attrs.get(att)
 
@@ -31,6 +31,7 @@ class BiasModelData:
                 assert att in self.info.keys()
 
             # The over density field (NxNxN)
+            # TODO: consistent naming
             self.overdensity_field = f['delta_field'][...]
             print(f"Loaded overdensity field shape={self.overdensity_field.shape}")
             assert np.all(self.overdensity_field.shape == self.info['GridSize'])
