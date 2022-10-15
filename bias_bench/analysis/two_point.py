@@ -1,11 +1,11 @@
-import matplotlib.pyplot as plt
 import numpy as np
+import matplotlib.pyplot as plt
 
 from bias_bench.io import BiasModelData
 
 
 def plot_power_spectrum(bias_model_data: BiasModelData, kmin=1e-3, kmax=1.0, Nk=32, normalize=True,
-                        show_density=False):
+                        show_density=False, pylians=False):
     l_box = bias_model_data.info['BoxSize']
 
     try:
@@ -18,7 +18,7 @@ def plot_power_spectrum(bias_model_data: BiasModelData, kmin=1e-3, kmax=1.0, Nk=
     try:
         ground_truth = bias_model_data.count_field_truth
         k_truth, power_truth = compute_power_spectrum(ground_truth, l_box, kmin, kmax, Nk, normalize)
-        plt.loglog(k_truth, power_truth, label='truth')
+        plt.loglog(k_truth, power_truth, label='ground truth')
     except AttributeError:
         print("No ground truth count field found in BiasModelData. Skipping plots")
 
@@ -35,7 +35,6 @@ def plot_power_spectrum(bias_model_data: BiasModelData, kmin=1e-3, kmax=1.0, Nk=
     plt.show()
 
 
-# TODO: Find light-weight third-party power spectrum & bispectrum estimator
 def compute_power_spectrum(delta, Lbox, kmin, kmax, Nk, normalize):
     """Compute a 3d power spectrum from density contrast
 
@@ -85,3 +84,16 @@ def compute_power_spectrum(delta, Lbox, kmin, kmax, Nk, normalize):
     bc = 0.5 * (b[1:] + b[:-1])
 
     return bc, H
+
+
+def compute_power_spectrum_pylians(bias_model_data: BiasModelData):
+    import Pk_library as PKL
+
+    l_box = bias_model_data.info['BoxSize']
+    # FIXME: Enable use of double precision
+    overdensity = np.array(bias_model_data.overdensity_field, dtype=np.float32)
+
+    # TODO: pipe out pylians parameters
+    pk = PKL.Pk(overdensity, l_box, axis=0, MAS='CIC')
+
+    return pk.k1D, pk.Pk1D
