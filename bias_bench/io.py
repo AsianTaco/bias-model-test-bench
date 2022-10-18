@@ -32,7 +32,7 @@ class BiasModelData:
 
             # The over density field (NxNxN)
             # TODO: consistent naming
-            self.overdensity_field = f['delta_field'][...]
+            self.overdensity_field = f['overdensity_field'][...]
             print(f"Loaded overdensity field shape={self.overdensity_field.shape}")
             assert np.all(self.overdensity_field.shape == self.info['GridSize'])
 
