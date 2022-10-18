@@ -10,6 +10,31 @@ def plot_power_spectrum(bias_model_data: BiasModelData, kmin=1e-3, kmax=1.0, Nk=
 
     # FIXME: Refactor this code duplication mess
     if pylians:
+        if show_density:
+            overdensity_field = bias_model_data.overdensity_field
+            k_density, power_density = compute_power_spectrum_pylians(overdensity_field, l_box)
+            plt.loglog(k_density, power_density, label="density")
+        try:
+            count_field = bias_model_data.count_field
+            k_counts, power_counts = compute_power_spectrum_pylians(count_field, l_box)
+            plt.loglog(k_counts, power_counts, label='predicted')
+        except AttributeError:
+            print("No predicted count field found in BiasModelData. Skipping plots")
+
+        try:
+            ground_truth = bias_model_data.count_field_truth
+            k_truth, power_truth = compute_power_spectrum_pylians(ground_truth, l_box)
+            plt.loglog(k_truth, (2 * np.pi ** 2) * power_truth / k_truth ** 3, label='ground truth')
+            k, power = compute_power_spectrum(ground_truth, l_box, kmin=1e-3, kmax=4e-1, Nk=32, normalize=normalize)
+            plt.loglog(k, power, label='manual')
+        except AttributeError:
+            print("No ground truth count field found in BiasModelData. Skipping plots")
+
+    else:
+        if show_density:
+            overdensity_field = bias_model_data.overdensity_field
+            k_density, power_density = compute_power_spectrum(overdensity_field, l_box, kmin, kmax, Nk, normalize)
+            plt.loglog(k_density, power_density, label="density")
         try:
             count_field = bias_model_data.count_field
             k_counts, power_counts = compute_power_spectrum(count_field, l_box, kmin, kmax, Nk, normalize)
@@ -23,30 +48,6 @@ def plot_power_spectrum(bias_model_data: BiasModelData, kmin=1e-3, kmax=1.0, Nk=
             plt.loglog(k_truth, power_truth, label='ground truth')
         except AttributeError:
             print("No ground truth count field found in BiasModelData. Skipping plots")
-
-        if show_density:
-            overdensity_field = bias_model_data.overdensity_field
-            k_density, power_density = compute_power_spectrum_pylians(overdensity_field, l_box)
-            plt.loglog(k_density, power_density, label="density")
-    else:
-        try:
-            count_field = bias_model_data.count_field
-            k_counts, power_counts = compute_power_spectrum_pylians(count_field, l_box)
-            plt.loglog(k_counts, power_counts, label='predicted')
-        except AttributeError:
-            print("No predicted count field found in BiasModelData. Skipping plots")
-
-        try:
-            ground_truth = bias_model_data.count_field_truth
-            k_truth, power_truth = compute_power_spectrum_pylians(ground_truth, l_box)
-            plt.loglog(k_truth, power_truth, label='ground truth')
-        except AttributeError:
-            print("No ground truth count field found in BiasModelData. Skipping plots")
-
-        if show_density:
-            overdensity_field = bias_model_data.overdensity_field
-            k_density, power_density = compute_power_spectrum(overdensity_field, l_box, kmin, kmax, Nk, normalize)
-            plt.loglog(k_density, power_density, label="density")
 
     plt.xlabel(r"$k$ [$h \ \mathrm{Mpc}^{-1}$]")
     plt.ylabel(r"$P(k)$ [$h^{-3}\mathrm{Mpc}^3$]")

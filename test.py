@@ -5,10 +5,10 @@ from bias_bench.analysis.three_point import plot_bispectrum
 
 
 if __name__ == '__main__':
-    BM = BiasModelData("mock_data/eagle_25_box_haloes.hdf5")
+    BM = BiasModelData("mock_data/eagle_100_box.hdf5")
 
     plot_one_point_stats(BM)
-    plot_power_spectrum(BM, kmin=1e-1, kmax=10.0, Nk=32, normalize=True,
+    plot_power_spectrum(BM, kmin=1e-3, kmax=1.0, Nk=32, normalize=True,
                         show_density=False)
     plot_power_spectrum(BM, pylians=True)
     plot_bispectrum(BM)
