@@ -4,9 +4,14 @@ import matplotlib.pyplot as plt
 from bias_bench.io import BiasModelData
 
 
-def plot_power_spectrum(bias_model_data: BiasModelData, kmin=1e-2, kmax=5, Nk=64, normalize=True,
-                        show_density=False, pylians=False):
+def plot_power_spectrum(bias_model_data: BiasModelData, params,
+        normalize=True, show_density=False, pylians=False):
+    
+    # Extract params for power spectrum plotting.
     l_box = bias_model_data.info['BoxSize']
+    kmin = params['power_spectrum']['kmin']
+    kmax = params['power_spectrum']['kmax']
+    Nk = params['power_spectrum']['Nk']
 
     # FIXME: Refactor this code duplication mess
     if pylians:

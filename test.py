@@ -47,7 +47,8 @@ class BiasParams:
             "count_field_truth_name": "count_field_truth",
             "count_field_name": "count_field",
             "plotting_style": "nature.mplstyle",
-            "predict_counts": None
+            "predict_counts": None,
+            "power_spectrum": None
         }
 
         for att in _defaults.keys():
@@ -93,11 +94,11 @@ if __name__ == '__main__':
         _predict_galaxy_counts(BM, params)
 
     # Set plotting style.
-    plt.style.use("nature.mplstyle")
+    plt.style.use(f"./plot_styles/{params['plotting_style']}")
 
     # Make plots.
     plot_one_point_stats(BM)
-    plot_power_spectrum(BM, kmin=1e-2, kmax=5, Nk=64, normalize=True,
-                        show_density=False)
+    if params['power_spectrum'] is not None:
+        plot_power_spectrum(BM, params)
     #plot_power_spectrum(BM, pylians=True)
     #plot_bispectrum(BM)
