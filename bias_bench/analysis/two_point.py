@@ -118,6 +118,6 @@ def compute_power_spectrum_pylians(field, l_box):
     overdensity = np.array(field, dtype=np.float32)
 
     # TODO: pipe out pylians parameters
-    pk = PKL.Pk(overdensity, l_box, axis=0, MAS='CIC')
+    pk = PKL.Pk(overdensity, l_box, axis=0, MAS='None')
 
-    return pk.k1D, pk.Pk1D
+    return pk.k3D, pk.Pk[:, 0]
