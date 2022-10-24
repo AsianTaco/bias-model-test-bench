@@ -3,6 +3,36 @@ import numpy as np
 import matplotlib.pyplot as plt
 import h5py
 
+"""
+Generate a density field and galaxy count field from the EAGLE simulations.
+
+The density field input is from the *DARK MATTER ONLY* version of the
+simulation and the galaxy count field is taken from the hydro version. This
+then emulates what we do in BORG, i.e., going from DMO realisation to galaxy
+count field.
+
+Example usage:
+    python3 generate_mock_eagle_data.py \
+            <dmo_snapshot> \
+            <eagle_db_username> \
+            <eagle_db_password> \
+            <Ngrid>
+
+    Ngrid is the grid dimension (resolution you want), i.e., 32, 64 etc...
+
+On cosma the data is located in the dir:
+    /cosma7/data/Eagle/ScienceRuns/Planck1/
+
+Output:
+    This will make and HDF5 will 3 arrays (NxNxN). 
+        - dm_delta (the overdensity field)
+        - galaxy_counts (the galaxy counts field)
+        - subhalo_counts (the subhalo counts field)
+
+You could modify this script if you wished to add a mass cut to the
+halo/galaxxy selections.
+"""
+
 # Load dark matter particles.
 e25_dmo = "/cosma7/data/Eagle/ScienceRuns/Planck1/L0025N0376/PE/DMONLY/data/snapshot_028_z000p000/snap_028_z000p000.0.hdf5"
 eagle = EagleSnapshot(e25_dmo)
