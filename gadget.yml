@@ -1,0 +1,9 @@
+hdf5_file_path: mock_data/eagle_25_box_haloes.hdf5
+overdensity_field_name: delta_field
+
+predict_counts_model: truncated_power_law
+
+power_spectrum:
+  kmin: 0.1
+  kmax: 5
+  Nk: 50
