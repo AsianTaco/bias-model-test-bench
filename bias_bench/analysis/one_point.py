@@ -4,6 +4,7 @@ from bias_bench.io import BiasModelData
 
 
 def plot_one_point_stats(bias_model_data: BiasModelData):
+
     overdensity_field_flat = bias_model_data.overdensity_field.flatten()
 
     try:
@@ -18,8 +19,12 @@ def plot_one_point_stats(bias_model_data: BiasModelData):
     except AttributeError:
         print("No ground truth count field found in BiasModelData. Skipping plots")
 
+    # Finalize figure.
+    plt.xlabel(r"1 + $\delta$") 
+    plt.ylabel("Counts")
     plt.loglog()
     plt.xlim(1e-3, 1e3)
     plt.ylim(1, 1e2)
+    plt.tight_layout(pad=0.1)
     plt.legend()
     plt.show()

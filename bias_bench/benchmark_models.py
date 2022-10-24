@@ -1,11 +1,6 @@
 import numpy as np
 import scipy
 from numba import njit
-import matplotlib.pyplot as plt
-
-from bias_bench.io import BiasModelData
-from bias_bench.analysis.two_point import compute_power_spectrum
-
 
 @njit
 def _poisson_loop(delta_m, ngal_mean):
@@ -20,7 +15,7 @@ def _poisson_loop(delta_m, ngal_mean):
     return ngal
 
 
-class PowerLawBiasModel:
+class TruncatedPowerLaw:
 
     def power_law_model(self, delta_m, nmean, beta, rho_g, epsilon_g):
         d = 1 + delta_m
@@ -60,34 +55,3 @@ class PowerLawBiasModel:
             except:
                 continue
         return ngal
-
-
-if __name__ == '__main__':
-    BM = BiasModelData("../../mock_data/eagle_25_box.hdf5")
-
-    pl_model = PowerLawBiasModel()
-    delta_flattened = BM.delta.flatten()
-    galaxy_counts_flattened = BM.galaxy_counts.flatten()
-
-    fitted_params = pl_model.fit(delta_flattened, galaxy_counts_flattened)
-    count_mean = pl_model.predict(delta_flattened, fitted_params)
-    predicted_count_field = pl_model.sample(delta_flattened, fitted_params)
-
-    plt.scatter(delta_flattened, count_mean + 1, label='fitted')
-    plt.scatter(delta_flattened, galaxy_counts_flattened + 1, label='ground truth')
-    plt.scatter(delta_flattened, predicted_count_field + 1, label='predict')
-    plt.loglog()
-    plt.xlim(1e-3, 1e3)
-    plt.ylim(1, 1e2)
-    plt.legend()
-    plt.show()
-
-    k_truth, power_truth = compute_power_spectrum(BM.galaxy_counts, 25., kmin=1e-1, kmax=10.0)
-    k_predict, power_predict = compute_power_spectrum(predicted_count_field.reshape(32, 32, 32), 25., kmin=1e-1,
-                                                      kmax=10.0)
-
-    plt.loglog(k_truth, power_truth, label="truth")
-    plt.loglog(k_predict, power_predict, label='predict')
-    # TODO: Add ground truth plot
-    plt.legend()
-    plt.show()
