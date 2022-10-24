@@ -109,9 +109,9 @@ plt.close()
 print("Saving")
 # Save to hdf5 file.
 with h5py.File(f"{savename}.hdf5", "w") as f:
-    f.create_dataset("dm_delta_field", data=H)
-    f.create_dataset("subhalo_count_field", data=H_sub)
-    f.create_dataset("galaxy_count_field", data=H_gal)
+    f.create_dataset("dm_delta_field", data=H.astype(np.float32))
+    f.create_dataset("subhalo_count_field", data=H_sub.astype(np.uint16))
+    f.create_dataset("galaxy_count_field", data=H_gal.astype(np.uint16))
 
     # Header information.
     g = f.create_group("Header")
