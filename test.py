@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 
 import yaml
 
+
 class BiasParams:
 
     def __init__(self, param_file):
@@ -54,6 +55,7 @@ class BiasParams:
             if att not in self.data.keys():
                 self.data[att] = _defaults[att]
 
+
 def _predict_galaxy_counts(BM, params):
     """ Predict ngal from density field. """
 
@@ -79,6 +81,7 @@ def _predict_galaxy_counts(BM, params):
     # Store predicted count field.
     BM.count_field = predicted_count_field
 
+
 if __name__ == '__main__':
 
     # Load information from parameter file.
@@ -97,7 +100,5 @@ if __name__ == '__main__':
 
     # Make plots.
     plot_one_point_stats(BM)
-    plot_power_spectrum(BM, kmin=1e-2, kmax=5, Nk=64, normalize=True,
-                        show_density=False)
-    #plot_power_spectrum(BM, pylians=True)
-    #plot_bispectrum(BM)
+    plot_power_spectrum(BM)
+    plot_bispectrum(BM)

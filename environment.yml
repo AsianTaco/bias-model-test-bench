@@ -10,6 +10,7 @@ dependencies:
   - numba
   - scipy
   - pytest
+  - pyaml
   - pip:
     - cython
     - pyfftw
