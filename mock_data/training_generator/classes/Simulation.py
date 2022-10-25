@@ -24,6 +24,12 @@ class Simulation:
         self.eagle_db_user = sys.argv[2]
         self.eagle_db_pass = sys.argv[3]
 
+        # Save dir.
+        if len(sys.argv) > 4:
+            self.save_dir = sys.argv[4]
+        else:
+            self.save_dir =  "."
+
         # Load and grid galaxies in MPI?
         self.mpi_galaxy = True
 
@@ -102,7 +108,7 @@ class Simulation:
             self.plot(density_grid, galaxy_grid)
 
             print("Saving")
-            with h5py.File(f"{self.sim_name}.hdf5", "w") as f:
+            with h5py.File(f"{self.save_dir}/{self.sim_name}.hdf5", "w") as f:
                 f.create_dataset("delta_dm_grid", data=density_grid)
                 f.create_dataset("galaxy_count_grid", data=galaxy_grid)
 
