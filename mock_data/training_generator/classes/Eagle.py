@@ -54,7 +54,8 @@ class Eagle100(Simulation):
                     eagle..{self.sim_name}_subhalo
                 where
                     snapnum=28
-                    and masstype_star > 0
+                    and masstype_star >= 1e8
+                    and subgroupnumber = 0
                 """
         myData = sql.execute_query(con, myQuery)
         coords = np.c_[myData["x"], myData["y"], myData["z"]]
@@ -77,3 +78,19 @@ class Eagle25(Eagle100):
             "/cosma7/data/Eagle/ScienceRuns/Planck1/L0025N0376/"
             "PE/DMONLY/data/snapshot_028_z000p000/snap_028_z000p000.0.hdf5"
         )
+
+class Eagle50(Eagle100):
+    def __init__(self):
+
+        super().__init__()
+
+        # Parameters for the Sibelius-DARK simulation.
+        self.boxsize = 50 * 0.6777
+        self.h = 0.6777
+        self.sim_name = "refl0050n0752"
+        self.load_region = self.boxsize
+        self.dmo_snap = (
+            "/cosma7/data/Eagle/ScienceRuns/Planck1/L0050N0752/"
+            "PE/DMONLY/data/snapshot_028_z000p000/snap_028_z000p000.0.hdf5"
+        )
+

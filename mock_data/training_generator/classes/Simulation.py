@@ -98,29 +98,39 @@ class Simulation:
 
     def run(self):
 
+        # Compute density grid.
         density_grid = self.grid_density_data()
+
+        # Save density grid.
+        if self.comm_rank == 0:
+            d_grid_shape = density_grid.shape
+            with h5py.File(f"{self.save_dir}/{self.sim_name}.hdf5", "w") as f:
+                f.create_dataset("delta_dm_grid", data=density_grid)
+            self.plot(density_grid, "density")
+        del density_grid
+
+        # Compute galaxy grid.
         galaxy_grid = self.grid_galaxy_data()
 
         if self.comm_rank == 0:
-            print(density_grid.shape, galaxy_grid.shape)
-            assert density_grid.shape == galaxy_grid.shape
+            assert d_grid_shape == galaxy_grid.shape
             
-            self.plot(density_grid, galaxy_grid)
-
-            print("Saving")
-            with h5py.File(f"{self.save_dir}/{self.sim_name}.hdf5", "w") as f:
-                f.create_dataset("delta_dm_grid", data=density_grid)
+            with h5py.File(f"{self.save_dir}/{self.sim_name}.hdf5", "a") as f:
                 f.create_dataset("galaxy_count_grid", data=galaxy_grid)
+            self.plot(galaxy_grid, "galaxies")
+        del galaxy_grid
 
-    def plot(self, density_grid, galaxy_grid):
+    def plot(self, X, name):
 
-        f, axarr = plt.subplots(1, 2)
-        mask = np.where(density_grid > 0)
-        density_grid[mask] = np.log10(1+density_grid[mask])
-        axarr[0].imshow(np.sum(density_grid, axis=2))
-        axarr[1].imshow(np.sum(galaxy_grid, axis=2))
+        print(f"Plotting {name}...")
+        if name == 'density':
+            mask = np.where(X > 0)
+            X[mask] = np.log10(1+X[mask])
+            plt.imshow(np.sum(X, axis=2))
+        else:
+            plt.imshow(np.sum(X, axis=2))
         plt.tight_layout(pad=0.1)
-        plt.savefig(f"{self.sim_name}.png")
+        plt.savefig(f"{self.sim_name}_{name}.png")
         plt.close()
 
     def get_loading_region(self):
