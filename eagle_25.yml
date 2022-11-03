@@ -1,5 +1,6 @@
-hdf5_file_path: mock_data/data.hdf5
+hdf5_file_path: mock_data/eagle.hdf5
 overdensity_field_name: refl0025n0376/ngrid32/density
+count_field_truth_name: refl0025n0376/ngrid32/galaxies_both
 
 predict_counts_model: truncated_power_law
 
