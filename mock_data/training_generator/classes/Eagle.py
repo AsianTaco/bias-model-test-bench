@@ -12,7 +12,6 @@ class Eagle100(Simulation):
         super().__init__()
 
         # Parameters for the EAGLE 100 simulation.
-        self.galaxy_mpi = False
         self.boxsize = 100 * 0.6777
         self.h = 0.6777
         self.sim_name = "refl0100n1504"
@@ -39,8 +38,22 @@ class Eagle100(Simulation):
     def load_galaxies(self):
         """Load all galaxies from the EAGLE database."""
 
-        if self.comm_rank != 0:
-            return None
+        # No MPI working with database.
+        assert self.comm_size == 1
+
+        # Galaxies or subhaloes ?
+        if self.which_count_field == 'galaxies':
+            op1 = ">"
+        else:
+            op1 = ">="
+
+        # Centrals, satellites, or both?
+        if self.which_count_type == "centrals":
+            op2 = "="
+        elif self.which_count_type == "satellites":
+            op2 = ">"
+        else:
+            op2 = ">="
 
         # Load galaxies from eagle database.
         print("Getting galaxies from database")
@@ -54,8 +67,8 @@ class Eagle100(Simulation):
                     eagle..{self.sim_name}_subhalo
                 where
                     snapnum=28
-                    and masstype_star >= 1e8
-                    and subgroupnumber = 0
+                    and masstype_star {op1} 0
+                    and subgroupnumber {op2} 0
                 """
         myData = sql.execute_query(con, myQuery)
         coords = np.c_[myData["x"], myData["y"], myData["z"]]

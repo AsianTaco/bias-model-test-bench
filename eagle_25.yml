@@ -1,5 +1,5 @@
-hdf5_file_path: mock_data/eagle_25_box_haloes.hdf5
-overdensity_field_name: delta_field
+hdf5_file_path: mock_data/data.hdf5
+overdensity_field_name: refl0025n0376/ngrid32/density
 
 predict_counts_model: truncated_power_law
 
