@@ -1,4 +1,3 @@
-# TODO: Add all possible fields here with a description
 hdf5_file_path: mock_data/eagle_25_box_haloes.hdf5
 overdensity_field_name: delta_field
 
