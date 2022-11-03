@@ -106,7 +106,9 @@ class Simulation:
                 if g_name in f:
                     del f[g_name]
 
-                f.create_dataset(g_name, data=grid)
+                d = f.create_dataset(g_name, data=grid)
+                d.attrs.create("BoxSize", self.boxsize)
+                d.attrs.create("GridSize", self.Ngrid)
 
     def get_loading_region(self):
         region = (
