@@ -19,7 +19,7 @@ Can be run over MPI.
 from training_generator.classes.Eagle import Eagle25, Eagle50, Eagle100
 
 
-x = Eagle25()
+#x = Eagle25()
 #x = Eagle50()
-#x = Eagle100()
+x = Eagle100()
 x.run()
