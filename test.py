@@ -3,57 +3,8 @@ from bias_bench.analysis.two_point import plot_power_spectrum
 from bias_bench.analysis.one_point import plot_one_point_stats
 from bias_bench.analysis.three_point import plot_bispectrum
 from bias_bench.benchmark_models import TruncatedPowerLaw
+from bias_bench.Params import BiasParams
 import matplotlib.pyplot as plt
-
-import yaml
-
-class BiasParams:
-
-    def __init__(self, param_file):
-
-        self.param_file = param_file
-
-        # Load parameters from yaml file.
-        self._load_params()
-
-        # Append default values.
-        self._mix_with_defaults()
-
-        # Print params.
-        self._print_params()
-
-    def _load_params(self):
-
-        with open(self.param_file) as file:
-            self.data = yaml.load(file, Loader=yaml.FullLoader)
-
-    def _print_params(self):
-        """ Print out parameters to terminal. """
-        OKGREEN = "\033[92m"
-        OKCYAN = "\033[96m"
-        ENDC = "\033[0m"
-
-        print(f"----------")
-        print(f"Loaded parameter file {self.param_file}")
-        print(f"----------")
-        for att in self.data:
-            print(f"{OKGREEN}{att}{ENDC}: {OKCYAN}{self.data[att]}{ENDC}")
-        print(f"----------")
-
-    def _mix_with_defaults(self):
-
-        _defaults = {
-            "overdensity_field_name": "overdensity_field",
-            "count_field_truth_name": "count_field_truth",
-            "count_field_name": "count_field",
-            "plotting_style": "nature.mplstyle",
-            "predict_counts": None,
-            "power_spectrum": None
-        }
-
-        for att in _defaults.keys():
-            if att not in self.data.keys():
-                self.data[att] = _defaults[att]
 
 def _predict_galaxy_counts(BM, params):
     """ Predict ngal from density field. """
