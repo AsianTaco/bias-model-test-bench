@@ -19,6 +19,11 @@ class BiasParams:
     hdf5_file_path : string
         Path to HDF5 file that contains the fields
 
+    plots : list of strings
+        The plots to make, options are:
+            - power_spectrum
+            - ngal_vs_rho
+
     Optional IO parameters in YAML file
     -----------------------------------
     overdensity_field_name : string
@@ -29,7 +34,14 @@ class BiasParams:
     count_field_name : string
         HDF5 dataset name containing the biad model predicted count field
 
-
+    Optional power spectrum plot options in YAML file
+    -------------------------------------------------
+    kmin : float
+        Minimum k (Mpc/h)
+    kmax : float
+        Maximum k (Mpc/h)
+    Nk : float
+        Num of k bins between min and max
     """
 
     def __init__(self, param_file):
@@ -42,6 +54,9 @@ class BiasParams:
         # Append default values.
         self._mix_with_defaults()
 
+        # Sanity checks.
+        self._sanity_checks()
+
         # Print params.
         self._print_params()
 
@@ -49,6 +64,11 @@ class BiasParams:
 
         with open(self.param_file) as file:
             self.data = yaml.load(file, Loader=yaml.FullLoader)
+
+        # Check we have required params.
+        _required = ['plots', 'hdf5_file_path']
+        for att in _required:
+            assert att in self.data.keys(), f"Need {att} as param"
 
     def _print_params(self):
         """ Print out parameters to terminal. """
@@ -71,9 +91,14 @@ class BiasParams:
             "count_field_name": "count_field",
             "plotting_style": "nature.mplstyle",
             "predict_counts": None,
-            "power_spectrum": None
+            "power_spectrum": {'kmin': 0.1, 'kmax': 5, 'Nk': 50}
         }
 
         for att in _defaults.keys():
             if att not in self.data.keys():
                 self.data[att] = _defaults[att]
+
+    def _sanity_checks(self):
+        # Make sure power spectrum params are correct
+        for att in ['kmin', 'kmax', 'Nk']:
+            assert att in self.data['power_spectrum'].keys(), f"Missing {att}"

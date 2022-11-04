@@ -48,8 +48,10 @@ if __name__ == '__main__':
     plt.style.use(f"./plot_styles/{params['plotting_style']}")
 
     # Make plots.
-    plot_one_point_stats(BM)
-    if params['power_spectrum'] is not None:
+    if 'ngal_vs_rho' in params['plots']:
+        plot_one_point_stats(BM)
+    if 'power_spectrum' in params['plots']:
         plot_power_spectrum(BM, params)
+
     #plot_power_spectrum(BM, pylians=True)
     #plot_bispectrum(BM)

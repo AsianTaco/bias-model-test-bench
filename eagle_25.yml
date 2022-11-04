@@ -4,6 +4,9 @@ count_field_truth_name: refl0025n0376/ngrid32/galaxies_both
 
 predict_counts_model: truncated_power_law
 
+plots:
+  - power_spectrum
+
 power_spectrum:
   kmin: 0.1
   kmax: 5
