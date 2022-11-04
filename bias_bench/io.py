@@ -3,6 +3,33 @@ import numpy as np
 
 
 class BiasModelData:
+    """
+    Loads the bias model data from the HDF5 file.
+
+    Stores the dark matter density field, predicted count field and true count
+    field.
+
+    Information about the simulation are expected to be stored as attributes in
+    the density field dataset (minimum required "BoxSize" and "GridSize").
+
+    Parameters
+    ----------
+    params : dict
+        Stores the bias_bench run parameters
+
+    Attributes
+    ----------
+    overdensity_field : 3d array [Ngrid,Ngrid,Ngrid]
+        The dark matter overdensity field
+    count_field : 3d array [Ngrid,Ngrid,Ngrid]
+        Galaxy or subhalo counts field (predicted from bias model)
+    count_field_truth : 3d array [Ngrid,Ngrid,Ngrid]
+        Galaxy or subhalo counts field (underlying truth from simulation)
+
+    info : dict
+        Stores parameters about the simulation
+    """
+
 
     def __init__(self, params):
 
@@ -19,12 +46,11 @@ class BiasModelData:
 
         with h5py.File(self.params['hdf5_file_path'], "r") as f:
 
-            # The over density field (NxNxN)
-            # TODO: consistent naming
+            # The over density field.
             self.overdensity_field = f[self.params['overdensity_field_name']][...]
             print(f"Loaded overdensity field shape={self.overdensity_field.shape}")
             
-            # Load simulation info from attributes.
+            # Load simulation info from attributes of the overdensity dataset.
             for att in f[self.params['overdensity_field_name']].attrs.keys():
                 self.info[att] = f[self.params['overdensity_field_name']].attrs.get(att)
             assert np.all(self.overdensity_field.shape == self.info['GridSize'])
@@ -41,7 +67,13 @@ class BiasModelData:
                 print(f"Loaded count field truth shape={self.count_field_truth.shape}")
                 assert self.overdensity_field.shape == self.count_field_truth.shape
 
-        # Make sure we have the minimum ammount.
+        # Make sure we have the minimum needed simulation information.
         _required_header_params = ['BoxSize', 'GridSize']
         for att in _required_header_params:
             assert att in self.info.keys()
+
+        # Sanity checks.
+        assert self.info["BoxSize"] > 0.0
+        for att in ["overdensity_field", "count_field", "count_field_truth"]:
+            if hasattr(self, att):
+                assert np.all(getattr(self, att).shape == self.info['GridSize'])
