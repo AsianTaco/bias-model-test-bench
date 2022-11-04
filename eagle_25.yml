@@ -1,8 +1,12 @@
 # TODO: Add all possible fields here with a description
-hdf5_file_path: mock_data/eagle_25_box_haloes.hdf5
-overdensity_field_name: delta_field
+hdf5_file_path: mock_data/eagle.hdf5
+overdensity_field_name: refl0025n0376/ngrid32/density
+count_field_truth_name: refl0025n0376/ngrid32/galaxies_both
 
 predict_counts_model: truncated_power_law
+
+plots:
+  - power_spectrum
 
 power_spectrum:
   kmin: 0.1

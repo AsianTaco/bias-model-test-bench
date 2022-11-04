@@ -1,0 +1,104 @@
+import yaml
+
+class BiasParams:
+    """
+    Load parameters from the parameter YAML file.
+
+    If a given parameter is not present in the parameter file, a default will
+    be used.
+
+    Some parameters are required, see below.
+
+    Attributes
+    ----------
+    data : dict
+        Dictionary storing the bias_bench parameters
+
+    Required parameters in YAML file
+    --------------------------------
+    hdf5_file_path : string
+        Path to HDF5 file that contains the fields
+
+    plots : list of strings
+        The plots to make, options are:
+            - power_spectrum
+            - ngal_vs_rho
+
+    Optional IO parameters in YAML file
+    -----------------------------------
+    overdensity_field_name : string
+        HDF5 dataset name containing the dark matter overdensity field
+        e.g, "refl0025n0376/ngrid32/density" for eagle.hdf5
+    count_field_truth_name : string
+        HDF5 dataset name containing the ground truth count field
+    count_field_name : string
+        HDF5 dataset name containing the biad model predicted count field
+
+    Optional power spectrum plot options in YAML file
+    -------------------------------------------------
+    kmin : float
+        Minimum k (Mpc/h)
+    kmax : float
+        Maximum k (Mpc/h)
+    Nk : float
+        Num of k bins between min and max
+    """
+
+    def __init__(self, param_file):
+
+        self.param_file = param_file
+
+        # Load parameters from yaml file.
+        self._load_params()
+
+        # Append default values.
+        self._mix_with_defaults()
+
+        # Sanity checks.
+        self._sanity_checks()
+
+        # Print params.
+        self._print_params()
+
+    def _load_params(self):
+
+        with open(self.param_file) as file:
+            self.data = yaml.load(file, Loader=yaml.FullLoader)
+
+        # Check we have required params.
+        _required = ['plots', 'hdf5_file_path']
+        for att in _required:
+            assert att in self.data.keys(), f"Need {att} as param"
+
+    def _print_params(self):
+        """ Print out parameters to terminal. """
+        OKGREEN = "\033[92m"
+        OKCYAN = "\033[96m"
+        ENDC = "\033[0m"
+
+        print(f"----------")
+        print(f"Loaded parameter file {self.param_file}")
+        print(f"----------")
+        for att in self.data:
+            print(f"{OKGREEN}{att}{ENDC}: {OKCYAN}{self.data[att]}{ENDC}")
+        print(f"----------")
+
+    def _mix_with_defaults(self):
+
+        _defaults = {
+            "overdensity_field_name": "overdensity_field",
+            "count_field_truth_name": "count_field_truth",
+            "count_field_name": "count_field",
+            "plotting_style": "nature.mplstyle",
+            "predict_counts": None,
+            "power_spectrum": {'kmin': 0.1, 'kmax': 5, 'Nk': 50}
+        }
+
+        for att in _defaults.keys():
+            if att not in self.data.keys():
+                self.data[att] = _defaults[att]
+
+    def _sanity_checks(self):
+        # Make sure power spectrum params are correct
+        for att in ['kmin', 'kmax', 'Nk']:
+            assert att in self.data['power_spectrum'].keys(), f"Missing {att}"
