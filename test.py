@@ -1,10 +1,11 @@
-from bias_bench.io import BiasModelData
+from bias_bench.io import BiasModelData, BiasParams
 from bias_bench.analysis.two_point import plot_power_spectrum
 from bias_bench.analysis.one_point import plot_one_point_stats
 from bias_bench.analysis.three_point import plot_bispectrum
 from bias_bench.benchmark_models import TruncatedPowerLaw
 from bias_bench.Params import BiasParams
 import matplotlib.pyplot as plt
+
 
 def _predict_galaxy_counts(BM, params):
     """ Predict ngal from density field. """
@@ -16,6 +17,7 @@ def _predict_galaxy_counts(BM, params):
     delta_flattened = BM.overdensity_field.flatten()
     counts_flattened = BM.count_field_truth.flatten()
 
+    # TOASK: Why do we want to set this field?
     if params['predict_counts_model'] == "truncated_power_law":
         pl_model = TruncatedPowerLaw()
 
@@ -31,27 +33,28 @@ def _predict_galaxy_counts(BM, params):
     # Store predicted count field.
     BM.count_field = predicted_count_field
 
+
 if __name__ == '__main__':
 
     # Load information from parameter file.
     params = BiasParams("eagle_25.yml")
-    params = params.data
+    # params = params.data
 
     # Load data.
     BM = BiasModelData(params)
 
     # Predict counts using benchmark models.
-    if params["predict_counts_model"] is not None:
-        _predict_galaxy_counts(BM, params)
+    if params.data["predict_counts_model"] is not None:
+        _predict_galaxy_counts(BM, params.data)
 
     # Set plotting style.
-    plt.style.use(f"./plot_styles/{params['plotting_style']}")
+    plt.style.use(f"./plot_styles/{params.data['plotting_style']}")
 
     # Make plots.
-    if 'ngal_vs_rho' in params['plots']:
+    if 'ngal_vs_rho' in params.data['plots']:
         plot_one_point_stats(BM)
-    if 'power_spectrum' in params['plots']:
+    if 'power_spectrum' in params.data['plots']:
         plot_power_spectrum(BM, params)
 
-    #plot_power_spectrum(BM, pylians=True)
-    #plot_bispectrum(BM)
+    # plot_power_spectrum(BM, pylians=True)
+    # plot_bispectrum(BM)

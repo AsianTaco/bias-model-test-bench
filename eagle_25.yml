@@ -1,3 +1,4 @@
+# TODO: Add all possible fields here with a description
 hdf5_file_path: mock_data/eagle.hdf5
 overdensity_field_name: refl0025n0376/ngrid32/density
 count_field_truth_name: refl0025n0376/ngrid32/galaxies_both
