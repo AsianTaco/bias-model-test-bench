@@ -69,6 +69,12 @@ class BiasModelData:
                 print(f"Loaded count field truth shape={self.count_field_truth.shape}")
                 assert self.overdensity_field.shape == self.count_field_truth.shape
 
+            # Count field (benchmark)
+            if self.params['count_field_benchmark_name'] in f:
+                self.count_field_benchmark = f[self.params[['count_field_benchmark_name']]][...]
+                print(f"Loaded benchmark count field shape={self.count_field_truth.shape}")
+                assert self.overdensity_field.shape == self.count_field_benchmark.shape
+
         # Make sure we have the minimum needed simulation information.
         _required_header_params = ['BoxSize', 'GridSize']
         for att in _required_header_params:

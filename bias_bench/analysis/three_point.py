@@ -21,14 +21,14 @@ def compute_bispectrum(field, Lbox, k1, k2, Ntheta, MAS):
     return theta, {'bispectrum': bbk.B, 'reduced_bispectrum': bbk.Q}
 
 
-def plot_bispectrum(bias_model_data: BiasModelData, params):
+def plot_bispectrum(bias_model_data: BiasModelData, plotting_params, benchmark_model_name):
     # TODO: Find out what k1, k2 values would be sensible so set as default
     l_box = bias_model_data.info['BoxSize']
-    show_density = params['show_density']
-    k1 = params['k1']
-    k2 = params['k2']
-    Ntheta = params['Ntheta']
-    MAS = params['MAS']
+    show_density = plotting_params['show_density']
+    k1 = plotting_params['k1']
+    k2 = plotting_params['k2']
+    Ntheta = plotting_params['Ntheta']
+    MAS = plotting_params['MAS']
 
     try:
         count_field = bias_model_data.count_field
@@ -43,6 +43,13 @@ def plot_bispectrum(bias_model_data: BiasModelData, params):
         plt.loglog(k_truth, bispec_truth['bispectrum'], label='ground truth')
     except AttributeError:
         print("No ground truth count field found in BiasModelData. Skipping plots")
+
+    try:
+        benchmark = bias_model_data.count_field_benchmark
+        k_benchmark, bispec_benchmark = compute_bispectrum(benchmark, l_box, k1, k2, Ntheta, MAS=MAS)
+        plt.loglog(k_benchmark, bispec_benchmark['bispectrum'], label=benchmark_model_name)
+    except AttributeError:
+        print("No benchmark count field found in BiasModelData. Skipping plots")
 
     if show_density:
         overdensity_field = bias_model_data.overdensity_field

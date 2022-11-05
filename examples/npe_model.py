@@ -13,7 +13,7 @@ if __name__ == '__main__':
     # Load data.
     BM = BiasModelData(params)
 
-    # if bias_param_data["predict_counts_model"] is not None:
-    #     predict_galaxy_counts(BM, params)
+    if bias_param_data["predict_counts_model"] is not None:
+        predict_galaxy_counts(BM, params)
 
     plot_bias_model_metrics(BM, params)

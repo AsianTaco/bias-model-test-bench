@@ -4,6 +4,7 @@ DefaultParameter = {
     "overdensity_field_name": "overdensity_field",
     "count_field_truth_name": "count_field_truth",
     "count_field_name": "count_field",
+    "count_field_benchmark_name": "truncated power law",
     "plotting_style": "nature.mplstyle",
     "predict_counts": None,
     "power_spectrum": {'show_density': False, 'MAS': None},

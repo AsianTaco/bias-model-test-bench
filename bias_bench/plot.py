@@ -10,12 +10,13 @@ import matplotlib.pyplot as plt
 def plot_bias_model_metrics(bias_model_data: BiasModelData, bias_params: BiasParams):
     params = bias_params.data
 
+    benchmark_model_name = params['count_field_benchmark_name']
     plt.style.use(f"./plot_styles/{params['plotting_style']}")
 
     # Make plots.
     if 'ngal_vs_rho' in params['plots']:
-        plot_one_point_stats(bias_model_data)
+        plot_one_point_stats(bias_model_data, benchmark_model_name)
     if 'power_spectrum' in params['plots']:
-        plot_power_spectrum(bias_model_data, params['power_spectrum'])
+        plot_power_spectrum(bias_model_data, params['power_spectrum'], benchmark_model_name)
     if 'bi_spectrum' in params['plots']:
-        plot_bispectrum(bias_model_data, params['bi_spectrum'])
+        plot_bispectrum(bias_model_data, params['bi_spectrum'], benchmark_model_name)

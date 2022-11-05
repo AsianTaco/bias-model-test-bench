@@ -4,7 +4,7 @@ overdensity_field_name: dm_overdensity_field
 count_field_truth_name: halo_count_truth/all_masses
 count_field_name: halo_count_predicted/all_masses
 
-# predict_counts_model: truncated_power_law
+predict_counts_model: truncated_power_law
 
 plots:
   - power_spectrum

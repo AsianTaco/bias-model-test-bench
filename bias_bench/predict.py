@@ -28,4 +28,5 @@ def predict_galaxy_counts(bias_model_data: BiasModelData, bias_params: BiasParam
         predicted_count_field = pl_model.sample(delta_flattened, fitted_params).reshape(bias_model_data.count_field_truth.shape)
 
         # Store predicted count field.
-        bias_model_data.count_field = predicted_count_field
+        params['count_field_benchmark_name'] = 'truncated power law'
+        bias_model_data.count_field_benchmark = predicted_count_field

@@ -16,16 +16,16 @@ def compute_power_spectrum(field, l_box, MAS):
     return pk.k3D, pk.Pk[:, 0]
 
 
-def plot_power_spectrum(bias_model_data: BiasModelData, params):
-
+def plot_power_spectrum(bias_model_data: BiasModelData, plotting_params, benchmark_model_name):
     l_box = bias_model_data.info['BoxSize']
-    show_density = params['show_density']
-    MAS = params['MAS']
+    show_density = plotting_params['show_density']
+    MAS = plotting_params['MAS']
 
     if show_density:
         overdensity_field = bias_model_data.overdensity_field
         k_density, power_density = compute_power_spectrum(overdensity_field, l_box, MAS=MAS)
         plt.loglog(k_density, power_density, label="density")
+
     try:
         count_field = bias_model_data.count_field
         k_counts, power_counts = compute_power_spectrum(count_field, l_box, MAS=MAS)
@@ -39,6 +39,13 @@ def plot_power_spectrum(bias_model_data: BiasModelData, params):
         plt.loglog(k_truth, power_truth, label='ground truth')
     except AttributeError:
         print("No ground truth count field found in BiasModelData. Skipping plots")
+
+    try:
+        benchmark = bias_model_data.count_field_benchmark
+        k_benchmark, power_benchmark = compute_power_spectrum(benchmark, l_box, MAS=MAS)
+        plt.loglog(k_benchmark, power_benchmark, label=benchmark_model_name)
+    except AttributeError:
+        print("No benchmark count field found in BiasModelData. Skipping plots")
 
     plt.xlabel(r"$k$ [$h \ \mathrm{Mpc}^{-1}$]")
     plt.ylabel(r"$P(k)$ [$h^{-3}\mathrm{Mpc}^3$]")
