@@ -1,9 +1,23 @@
-hdf5_file_path: mock_data/eagle_25_box_haloes.hdf5
-overdensity_field_name: delta_field
+hdf5_file_path: mock_data/lgadget_500mpc_1024part_npe.hdf5
+overdensity_field_name: dm_overdensity_field
 
-predict_counts_model: truncated_power_law
+count_field_truth_name: halo_count_truth/all_masses
+count_field_name: halo_count_predicted/all_masses
+
+# predict_counts_model: truncated_power_law
+
+plots:
+  - power_spectrum
+  - bi_spectrum
+#  - ngal_vs_rho
 
 power_spectrum:
-  kmin: 0.1
-  kmax: 5
-  Nk: 50
+  show_density: false
+  MAS:
+
+bi_spectrum:
+  show_density: false
+  k1: 0.05
+  k2: 0.1
+  Ntheta: 25
+  MAS:
