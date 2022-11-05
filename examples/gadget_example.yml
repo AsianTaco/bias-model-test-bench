@@ -9,7 +9,6 @@ predict_counts_model: truncated_power_law
 plots:
   - power_spectrum
   - bi_spectrum
-#  - ngal_vs_rho
 
 power_spectrum:
   show_density: false
