@@ -21,9 +21,14 @@ def compute_bispectrum(field, Lbox, k1, k2, Ntheta, MAS):
     return theta, {'bispectrum': bbk.B, 'reduced_bispectrum': bbk.Q}
 
 
-def plot_bispectrum(bias_model_data: BiasModelData, k1=0.5, k2=0.6, Ntheta=25, MAS='None', show_density=False):
+def plot_bispectrum(bias_model_data: BiasModelData, params):
     # TODO: Find out what k1, k2 values would be sensible so set as default
     l_box = bias_model_data.info['BoxSize']
+    show_density = params['show_density']
+    k1 = params['k1']
+    k2 = params['k2']
+    Ntheta = params['Ntheta']
+    MAS = params['MAS']
 
     try:
         count_field = bias_model_data.count_field

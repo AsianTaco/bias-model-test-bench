@@ -7,7 +7,7 @@ from bias_bench.predict import predict_galaxy_counts
 if __name__ == '__main__':
 
     # Load information from parameter file.
-    params = BiasParams("eagle_25.yml")
+    params = BiasParams("examples/eagle_25_example.yml")
     bias_param_data = params.data
 
     # Load data.

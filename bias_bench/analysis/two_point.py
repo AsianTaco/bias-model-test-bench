@@ -4,6 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from bias_bench.io import BiasModelData
+from bias_bench.Params import BiasParams
 
 
 def compute_power_spectrum(field, l_box, MAS):
@@ -15,8 +16,11 @@ def compute_power_spectrum(field, l_box, MAS):
     return pk.k3D, pk.Pk[:, 0]
 
 
-def plot_power_spectrum(bias_model_data: BiasModelData, show_density=False, MAS='None'):
+def plot_power_spectrum(bias_model_data: BiasModelData, params):
+
     l_box = bias_model_data.info['BoxSize']
+    show_density = params['show_density']
+    MAS = params['MAS']
 
     if show_density:
         overdensity_field = bias_model_data.overdensity_field

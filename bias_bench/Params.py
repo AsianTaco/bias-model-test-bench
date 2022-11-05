@@ -6,7 +6,8 @@ DefaultParameter = {
     "count_field_name": "count_field",
     "plotting_style": "nature.mplstyle",
     "predict_counts": None,
-    "power_spectrum": {'kmin': 0.1, 'kmax': 5, 'Nk': 50}
+    "power_spectrum": {'show_density': False, 'MAS': None},
+    "bi_spectrum": {'show_density': False, 'k1': 0.5, 'k2': 0.6, 'Ntheta': 25, 'MAS': None}
 }
 
 
@@ -97,5 +98,8 @@ class BiasParams:
 
     def _sanity_checks(self):
         # Make sure power spectrum params are correct
-        for att in ['kmin', 'kmax', 'Nk']:
+        for att in ['show_density', 'MAS']:
             assert att in self.data['power_spectrum'].keys(), f"Missing {att}"
+
+        for att in ['show_density', 'k1', 'k2', 'Ntheta', 'MAS']:
+            assert att in self.data['bi_spectrum'].keys(), f"Missing {att}"

@@ -16,6 +16,6 @@ def plot_bias_model_metrics(bias_model_data: BiasModelData, bias_params: BiasPar
     if 'ngal_vs_rho' in params['plots']:
         plot_one_point_stats(bias_model_data)
     if 'power_spectrum' in params['plots']:
-        plot_power_spectrum(bias_model_data, params)
+        plot_power_spectrum(bias_model_data, params['power_spectrum'])
     if 'bi_spectrum' in params['plots']:
-        plot_bispectrum(bias_model_data, params)
+        plot_bispectrum(bias_model_data, params['bi_spectrum'])

@@ -7,8 +7,16 @@ predict_counts_model: truncated_power_law
 
 plots:
   - power_spectrum
+  - bi_spectrum
+  - ngal_vs_rho
 
 power_spectrum:
-  kmin: 0.1
-  kmax: 5
-  Nk: 50
+  show_density: true
+  MAS:
+
+bi_spectrum:
+  show_density: false
+  k1: 0.5
+  k2: 0.6
+  Ntheta: 25
+  MAS:

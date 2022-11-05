@@ -3,10 +3,10 @@ import numpy as np
 
 from bias_bench.io import BiasModelData
 
+
 def _compute_mean_and_variance(overdensity_field, count_field, ax):
-    
     # Bins of overdensity.
-    bins = 10**np.arange(-3, 3, 0.1)
+    bins = 10 ** np.arange(-3, 3, 0.1)
 
     mean, var, bin_c = [], [], []
 
@@ -14,13 +14,13 @@ def _compute_mean_and_variance(overdensity_field, count_field, ax):
         mask = np.where((overdensity_field >= lo) & (overdensity_field < hi))
         mean.append(np.mean(count_field[mask]))
         var.append(np.var(count_field[mask]))
-        bin_c.append((lo+hi)/2.)
+        bin_c.append((lo + hi) / 2.)
 
     ax.plot(bin_c, mean, label='mean')
     ax.plot(bin_c, var, label='var')
 
-def plot_one_point_stats(bias_model_data: BiasModelData):
 
+def plot_one_point_stats(bias_model_data: BiasModelData):
     f, axarr = plt.subplots(2)
 
     overdensity_field_flat = bias_model_data.overdensity_field.flatten()
@@ -29,20 +29,20 @@ def plot_one_point_stats(bias_model_data: BiasModelData):
         count_field = bias_model_data.count_field
         axarr[0].scatter(overdensity_field_flat, count_field.flatten() + 1, label='predicted')
         _compute_mean_and_variance(overdensity_field_flat, count_field.flatten() + 1,
-                axarr[1])
+                                   axarr[1])
     except AttributeError:
         print("No predicted count field found in BiasModelData. Skipping plots")
 
     try:
         ground_truth = bias_model_data.count_field_truth
         axarr[0].scatter(overdensity_field_flat, ground_truth.flatten() + 1, label='ground truth',
-                s=3)
+                         s=3)
 
     except AttributeError:
         print("No ground truth count field found in BiasModelData. Skipping plots")
 
     # Finalize figure.
-    axarr[0].set_xlabel(r"1 + $\delta$") 
+    axarr[0].set_xlabel(r"1 + $\delta$")
     axarr[0].set_ylabel("Counts")
     axarr[0].loglog()
     axarr[0].set_xlim(1e-3, 1e3)
