@@ -4,6 +4,7 @@
 
 # Figure size
 figure.figsize : 3.3, 2.5  # max width is 3.5 for single column
+figure.dpi: 200
 
 # Font sizes
 axes.labelsize: 7

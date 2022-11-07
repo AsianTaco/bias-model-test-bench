@@ -1,0 +1,27 @@
+num_bias_models: 1
+
+bias_model_1:
+  hdf5_file_path: mock_data/lgadget_500mpc_1024part_npe.hdf5
+  overdensity_field_name: dm_overdensity_field
+  count_field_truth_name: halo_count_truth/all_masses
+  count_field_name: halo_count_predicted/all_masses
+  predict_counts_model: truncated_power_law
+
+  name: 'all masses'
+
+plots:
+  - power_spectrum
+  - bi_spectrum
+  - ngal_vs_rho
+  - density_images
+
+power_spectrum:
+  show_density: false
+  MAS:
+
+bi_spectrum:
+  show_density: false
+  k1: 0.05
+  k2: 0.1
+  Ntheta: 25
+  MAS:

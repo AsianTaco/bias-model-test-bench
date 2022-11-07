@@ -1,0 +1,34 @@
+num_bias_models: 2
+
+bias_model_1:
+  hdf5_file_path: mock_data/eagle.hdf5
+  overdensity_field_name: refl0025n0376/ngrid32/density
+  count_field_truth_name: refl0025n0376/ngrid32/galaxies_both
+
+  predict_counts_model: truncated_power_law
+  name: 'Eagle 25Mpc box'
+
+bias_model_2:
+  hdf5_file_path: mock_data/eagle.hdf5
+  overdensity_field_name: refl0100n1504/ngrid64/density
+  count_field_truth_name: refl0100n1504/ngrid64/galaxies_both
+
+  predict_counts_model: truncated_power_law
+  name: 'Eagle 100Mpc box'
+
+plots:
+  - power_spectrum
+  - bi_spectrum
+  - ngal_vs_rho
+  - density_images
+ 
+power_spectrum:
+  show_density: false
+  MAS:
+
+bi_spectrum:
+  show_density: false
+  k1: 0.5
+  k2: 0.6
+  Ntheta: 25
+  MAS:
