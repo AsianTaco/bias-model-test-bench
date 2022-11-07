@@ -1,16 +1,18 @@
 import yaml
 
 DefaultParameter = {
-    "overdensity_field_name": "overdensity_field",
-    "count_field_truth_name": "count_field_truth",
-    "count_field_name": "count_field",
-    "count_field_benchmark_name": "truncated power law",
     "plotting_style": "nature.mplstyle",
     "predict_counts": None,
     "power_spectrum": {'show_density': False, 'MAS': None},
     "bi_spectrum": {'show_density': False, 'k1': 0.5, 'k2': 0.6, 'Ntheta': 25, 'MAS': None}
 }
 
+DefaultSubParameter = {
+    "overdensity_field_name": "overdensity_field",
+    "count_field_truth_name": "count_field_truth",
+    "count_field_name": "count_field",
+    "count_field_benchmark_name": "truncated power law",
+}
 
 class BiasParams:
     """
@@ -72,10 +74,16 @@ class BiasParams:
             data = yaml.load(file, Loader=yaml.FullLoader)
 
         # Check we have required params.
-        _required = ['plots', 'hdf5_file_path']
+        _required = ['plots', 'num_bias_models', 'bias_model_1']
         for att in _required:
             assert att in data.keys(), f"Need {att} as param"
 
+        # Check we have required sub-params.
+        _required = ['hdf5_file_path']
+        for i in range(data['num_bias_models']):
+            for att in _required:
+                assert att in data[f'bias_model_{i+1}'].keys(), f"Need {att} as param"
+        
         return data
 
     def _print_params(self):
@@ -93,9 +101,16 @@ class BiasParams:
 
     def _append_default_values(self):
 
+        # Default overall parameters
         for att in DefaultParameter.keys():
             if att not in self.data.keys():
                 self.data[att] = DefaultParameter[att]
+
+        # Default sub parameters
+        for i in range(self.data['num_bias_models']):
+            for att in DefaultSubParameter.keys():
+                if att not in self.data[f'bias_model_{i+1}'].keys():
+                    self.data[f'bias_model_{i+1}'][att] = DefaultSubParameter[att]
 
     def _sanity_checks(self):
         # Make sure power spectrum params are correct

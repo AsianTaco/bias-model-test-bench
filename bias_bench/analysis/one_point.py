@@ -1,9 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-from bias_bench.io import BiasModelData
-
-
 def _compute_mean_and_variance(overdensity_field, count_field, ax, label):
     # Bins of overdensity.
     bins = 10 ** np.arange(-3, 3, 0.1)
@@ -20,44 +17,46 @@ def _compute_mean_and_variance(overdensity_field, count_field, ax, label):
     ax.plot(bin_c, var, label=f'var ({label})')
 
 
-def plot_one_point_stats(bias_model_data: BiasModelData, benchmark_model_name):
-    f, axarr = plt.subplots(2, figsize=(3, 5))
+def plot_one_point_stats(bias_model_list, benchmark_model_name):
 
-    overdensity_field_flat = bias_model_data.overdensity_field.flatten()
+    for bias_model_data in bias_model_list:
+        f, axarr = plt.subplots(2, figsize=(3, 5))
 
-    n_gal_zero = 0.5
+        overdensity_field_flat = bias_model_data.overdensity_field.flatten()
 
-    try:
-        count_field = bias_model_data.count_field
-        axarr[0].scatter(overdensity_field_flat, count_field.flatten() + n_gal_zero, label='predicted')
-        _compute_mean_and_variance(overdensity_field_flat, count_field.flatten(), axarr[1], 'predicted')
-    except AttributeError:
-        print("No predicted count field found in BiasModelData. Skipping plots")
+        n_gal_zero = 0.5
 
-    try:
-        ground_truth = bias_model_data.count_field_truth
-        axarr[0].scatter(overdensity_field_flat, ground_truth.flatten() + n_gal_zero, label='ground truth', s=3)
-    except AttributeError:
-        print("No ground truth count field found in BiasModelData. Skipping plots")
+        try:
+            count_field = bias_model_data.count_field
+            axarr[0].scatter(overdensity_field_flat, count_field.flatten() + n_gal_zero, label='predicted')
+            _compute_mean_and_variance(overdensity_field_flat, count_field.flatten(), axarr[1], 'predicted')
+        except AttributeError:
+            print("No predicted count field found in BiasModelData. Skipping plots")
 
-    try:
-        benchmark = bias_model_data.count_field_benchmark
-        axarr[0].scatter(overdensity_field_flat, benchmark.flatten() + n_gal_zero, label=benchmark_model_name, s=3)
-        _compute_mean_and_variance(overdensity_field_flat, benchmark.flatten(), axarr[1], benchmark_model_name)
-    except AttributeError:
-        print("No benchmark count field found in BiasModelData. Skipping plots")
+        try:
+            ground_truth = bias_model_data.count_field_truth
+            axarr[0].scatter(overdensity_field_flat, ground_truth.flatten() + n_gal_zero, label='ground truth', s=3)
+        except AttributeError:
+            print("No ground truth count field found in BiasModelData. Skipping plots")
 
-    # Finalize figure.
-    axarr[0].axhline(n_gal_zero, label='$n_{gal}=0$')
-    axarr[0].set_xlabel(r"1 + $\delta$")
-    axarr[0].set_ylabel("Counts")
-    axarr[0].loglog()
-    axarr[0].set_xlim(1e-3, 1e3)
-    axarr[0].set_ylim(bottom=0.1)
-    axarr[0].legend()
-    axarr[1].set_xscale('log')
-    axarr[1].set_xlabel(r"1 + $\delta$")
-    axarr[1].legend()
-    plt.tight_layout(pad=0.1)
-    plt.legend()
-    plt.show()
+        try:
+            benchmark = bias_model_data.count_field_benchmark
+            axarr[0].scatter(overdensity_field_flat, benchmark.flatten() + n_gal_zero, label=benchmark_model_name, s=3)
+            _compute_mean_and_variance(overdensity_field_flat, benchmark.flatten(), axarr[1], benchmark_model_name)
+        except AttributeError:
+            print("No benchmark count field found in BiasModelData. Skipping plots")
+
+        # Finalize figure.
+        axarr[0].axhline(n_gal_zero, label='$n_{gal}=0$')
+        axarr[0].set_xlabel(r"1 + $\delta$")
+        axarr[0].set_ylabel("Counts")
+        axarr[0].loglog()
+        axarr[0].set_xlim(1e-3, 1e3)
+        axarr[0].set_ylim(bottom=0.1)
+        axarr[0].legend()
+        axarr[1].set_xscale('log')
+        axarr[1].set_xlabel(r"1 + $\delta$")
+        axarr[1].legend()
+        plt.tight_layout(pad=0.1)
+        plt.legend()
+        plt.show()

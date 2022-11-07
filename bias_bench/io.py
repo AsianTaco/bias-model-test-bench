@@ -18,6 +18,8 @@ class BiasModelData:
     ----------
     params : dict
         Stores the bias_bench run parameters
+    which_model : int
+        Which bias model in the parameter file are we loading
 
     Attributes
     ----------
@@ -32,10 +34,11 @@ class BiasModelData:
         Stores parameters about the simulation
     """
 
-    def __init__(self, params: BiasParams):
+    def __init__(self, params: BiasParams, which_model=1):
 
         # Parameters from parameter file.
         self.params = params.data
+        self.which_model = which_model
 
         # Load the data.
         # TODO: Add option to not load anything from data
@@ -46,32 +49,34 @@ class BiasModelData:
 
         self.info = {}
 
-        with h5py.File(self.params['hdf5_file_path'], "r") as f:
+        p = self.params[f'bias_model_{self.which_model}']
+        
+        with h5py.File(p['hdf5_file_path'], "r") as f:
 
             # The over density field.
-            self.overdensity_field = f[self.params['overdensity_field_name']][...]
+            self.overdensity_field = f[p['overdensity_field_name']][...]
             print(f"Loaded overdensity field shape={self.overdensity_field.shape}")
 
             # Load simulation info from attributes of the overdensity dataset.
-            for att in f[self.params['overdensity_field_name']].attrs.keys():
-                self.info[att] = f[self.params['overdensity_field_name']].attrs.get(att)
+            for att in f[p['overdensity_field_name']].attrs.keys():
+                self.info[att] = f[p['overdensity_field_name']].attrs.get(att)
             assert np.all(self.overdensity_field.shape == self.info['GridSize'])
 
             # Count field (predicted)
-            if self.params['count_field_name'] in f:
-                self.count_field = f[self.params['count_field_name']][...]
+            if p['count_field_name'] in f:
+                self.count_field = f[p['count_field_name']][...]
                 print(f"Loaded predicted count field shape={self.count_field.shape}")
                 assert self.overdensity_field.shape == self.count_field.shape
 
             # Count field (truth)
-            if self.params['count_field_truth_name'] in f:
-                self.count_field_truth = f[self.params['count_field_truth_name']][...]
+            if p['count_field_truth_name'] in f:
+                self.count_field_truth = f[p['count_field_truth_name']][...]
                 print(f"Loaded count field truth shape={self.count_field_truth.shape}")
                 assert self.overdensity_field.shape == self.count_field_truth.shape
 
             # Count field (benchmark)
-            if self.params['count_field_benchmark_name'] in f:
-                self.count_field_benchmark = f[self.params[['count_field_benchmark_name']]][...]
+            if p['count_field_benchmark_name'] in f:
+                self.count_field_benchmark = f[p[['count_field_benchmark_name']]][...]
                 print(f"Loaded benchmark count field shape={self.count_field_truth.shape}")
                 assert self.overdensity_field.shape == self.count_field_benchmark.shape
 
