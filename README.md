@@ -3,7 +3,8 @@ Test bench
 
 TODO
 --
-* Generalize BiasParam read-in to multiple fields (e.g. for different resolutions and mass bins)
+* More comprehensive documentation
+* 
 
 Installation
 --

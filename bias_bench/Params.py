@@ -14,6 +14,7 @@ DefaultSubParameter = {
     "count_field_benchmark_name": "truncated power law",
 }
 
+
 class BiasParams:
     """
     Load parameters from the parameter YAML file.
@@ -82,8 +83,8 @@ class BiasParams:
         _required = ['hdf5_file_path']
         for i in range(data['num_bias_models']):
             for att in _required:
-                assert att in data[f'bias_model_{i+1}'].keys(), f"Need {att} as param"
-        
+                assert att in data[f'bias_model_{i + 1}'].keys(), f"Need {att} as param"
+
         return data
 
     def _print_params(self):
@@ -109,8 +110,8 @@ class BiasParams:
         # Default sub parameters
         for i in range(self.data['num_bias_models']):
             for att in DefaultSubParameter.keys():
-                if att not in self.data[f'bias_model_{i+1}'].keys():
-                    self.data[f'bias_model_{i+1}'][att] = DefaultSubParameter[att]
+                if att not in self.data[f'bias_model_{i + 1}'].keys():
+                    self.data[f'bias_model_{i + 1}'][att] = DefaultSubParameter[att]
 
     def _sanity_checks(self):
         # Make sure power spectrum params are correct

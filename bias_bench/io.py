@@ -18,7 +18,7 @@ class BiasModelData:
     ----------
     params : dict
         Stores the bias_bench run parameters
-    which_model : int
+    model_index : int
         Which bias model in the parameter file are we loading
 
     Attributes
@@ -34,11 +34,11 @@ class BiasModelData:
         Stores parameters about the simulation
     """
 
-    def __init__(self, params: BiasParams, which_model=1):
+    def __init__(self, params: BiasParams, model_index=1):
 
         # Parameters from parameter file.
         self.params = params.data
-        self.which_model = which_model
+        self.which_model = model_index
 
         # Load the data.
         # TODO: Add option to not load anything from data

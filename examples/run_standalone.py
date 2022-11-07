@@ -16,7 +16,7 @@ if __name__ == '__main__':
     # Load data.
     BM_list = []
     for i in range(params.data['num_bias_models']):
-        BM_list.append(BiasModelData(params, which_model=i+1))
+        BM_list.append(BiasModelData(params, model_index=i + 1))
 
         # Predict counts using benchmark models.
         # TODO: extract this to separate post-processing function
