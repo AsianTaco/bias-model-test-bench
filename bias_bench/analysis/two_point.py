@@ -4,7 +4,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from bias_bench.io import BiasModelData
-from bias_bench.Params import BiasParams
 
 
 def compute_power_spectrum(field, l_box, MAS):
@@ -17,6 +16,13 @@ def compute_power_spectrum(field, l_box, MAS):
 
 
 def plot_power_spectrum(bias_model_data: BiasModelData, plotting_params, benchmark_model_name):
+    ground_truth_field_exists = hasattr(bias_model_data, 'count_field_truth')
+
+    if ground_truth_field_exists:
+        fig, axs = plt.subplots(2, figsize=(3, 5))
+    else:
+        fig, axs = plt.subplots(1)
+
     l_box = bias_model_data.info['BoxSize']
     show_density = plotting_params['show_density']
     MAS = plotting_params['MAS']
@@ -24,31 +30,41 @@ def plot_power_spectrum(bias_model_data: BiasModelData, plotting_params, benchma
     if show_density:
         overdensity_field = bias_model_data.overdensity_field
         k_density, power_density = compute_power_spectrum(overdensity_field, l_box, MAS=MAS)
-        plt.loglog(k_density, power_density, label="density")
-
-    try:
-        count_field = bias_model_data.count_field
-        k_counts, power_counts = compute_power_spectrum(count_field, l_box, MAS=MAS)
-        plt.loglog(k_counts, power_counts, label='predicted')
-    except AttributeError:
-        print("No predicted count field found in BiasModelData. Skipping plots")
+        axs[0].loglog(k_density, power_density, label="density")
 
     try:
         ground_truth = bias_model_data.count_field_truth
         k_truth, power_truth = compute_power_spectrum(ground_truth, l_box, MAS=MAS)
-        plt.loglog(k_truth, power_truth, label='ground truth')
+        axs[0].loglog(k_truth, power_truth, label='ground truth')
     except AttributeError:
         print("No ground truth count field found in BiasModelData. Skipping plots")
 
     try:
+        count_field = bias_model_data.count_field
+        k_counts, power_counts = compute_power_spectrum(count_field, l_box, MAS=MAS)
+        axs[0].loglog(k_counts, power_counts, label='predicted')
+
+        if ground_truth_field_exists:
+            axs[1].loglog(k_truth, power_counts / power_truth, label='predicted')
+    except AttributeError:
+        print("No predicted count field found in BiasModelData. Skipping plots")
+
+    try:
         benchmark = bias_model_data.count_field_benchmark
         k_benchmark, power_benchmark = compute_power_spectrum(benchmark, l_box, MAS=MAS)
-        plt.loglog(k_benchmark, power_benchmark, label=benchmark_model_name)
+        axs[0].loglog(k_benchmark, power_benchmark, label=benchmark_model_name)
+
+        if ground_truth_field_exists:
+            axs[1].loglog(k_truth, power_benchmark / power_truth, label='benchmark')
     except AttributeError:
         print("No benchmark count field found in BiasModelData. Skipping plots")
 
-    plt.xlabel(r"$k$ [$h \ \mathrm{Mpc}^{-1}$]")
-    plt.ylabel(r"$P(k)$ [$h^{-3}\mathrm{Mpc}^3$]")
-    plt.tight_layout(pad=0.1)
+    axs[0].set_xlabel(r"$k$ [$h \ \mathrm{Mpc}^{-1}$]")
+    axs[0].set_ylabel(r"$P(k)$ [$h^{-3}\mathrm{Mpc}^3$]")
+    axs[1].set_xlabel(r"$k$ [$h \ \mathrm{Mpc}^{-1}$]")
+    axs[1].set_ylabel(r"$P(k) / P_{truth}(k)$ ")
+    axs[1].axhline(1, linewidth=.5, linestyle='--', color='black')
+    axs[1].set_ylim(1e-1, 1e1)
+    fig.tight_layout(pad=0.1)
     plt.legend()
     plt.show()

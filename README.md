@@ -38,10 +38,6 @@ Plotting options
 * power spectrum
 * bispectrum
 
-TODO plots: 
-* density field and galaxy field
-* ratio of power spectra w.r.t. the ground truth as an extra panel
-
 Example usage:
 --
 
