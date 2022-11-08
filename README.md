@@ -9,6 +9,27 @@ TODO
 Installation
 --
 
+If you use conda, you can simply set up a new environment and install the dependencies by running:
+
+```bash
+conda env create -f environment.yml
+```
+
+Initialize the package for the scripts using
+
+```bash
+pip install -e .
+```
+
+If you are using a pure python/pip setup, make sure to have the correct python version installed (See `python_requires` field in the **setup.cfg** file).
+Then again, install all dependencies and the package using the above `pip` command.
+
+You can test the installation by running the example script
+
+```bash
+python examples/run_standalone.py examples/eagle_25_example.yml
+```
+
 Build-in bias models
 --
 
