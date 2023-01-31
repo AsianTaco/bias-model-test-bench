@@ -3,15 +3,15 @@ channels:
   - conda-forge
   - defaults
 dependencies:
-  - python=3
+  - python>=3.7, <3.11
   - h5py
-  - numpy
+  - numpy=1.23.3
   - matplotlib
   - numba
   - scipy
   - pytest
   - pyaml
   - pip:
-    - cython
-    - pyfftw
-    - pylians
+      - cython
+      - pyfftw==0.12
+      - pylians==0.3

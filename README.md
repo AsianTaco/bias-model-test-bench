@@ -15,13 +15,13 @@ If you use conda, you can simply set up a new environment and install the depend
 conda env create -f environment.yml
 ```
 
-Initialize the package for the scripts using
+Then install as an editable package via
 
 ```bash
 pip install -e .
 ```
 
-If you are using a pure python/pip setup, make sure to have the correct python version installed (See `python_requires` field in the **setup.cfg** file).
+If you are using a pure python/pip setup, make sure to have the correct python version installed (See `requires-python` field in the **pyproject.toml** file).
 Then again, install all dependencies and the package using the above `pip` command.
 
 You can test the installation by running the example script
@@ -32,6 +32,12 @@ python examples/run_standalone.py examples/eagle_25_example.yml
 
 Build-in bias models
 --
+
+The test bench includes some benchmark bias models
+
+### Truncated power law
+
+A non-linear local bias model parameterized by 4 parameters by Neyrinck, M., et al. (2014)
 
 Input format
 --

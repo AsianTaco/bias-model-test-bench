@@ -1,7 +1,40 @@
 [build-system]
-requires = ["setuptools >= 65.4.0", "cython >= 0.29.0"]
+requires = ["setuptools >= 61.0", "cython >= 0.29.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "bias-bench"
-version = '0.1.0'
+name = 'bias_bench'
+version = '0.1'
+description = 'Test bench for halo and galaxy bias models'
+readme = 'README.MD'
+
+authors = [
+    { name = "Stuart McAlpine", email = "stuart.mcalpine@fysik.su.se" },
+    { name = "Simon Ding", email = "simon.ding@iap.fr" }
+]
+license = { file = 'LICENCE' }
+classifiers = [
+    'Programming Language :: Python :: 3',
+]
+keywords = ['bias', 'testbench', 'python']
+[project.urls]
+repository = "https://github.com/AsianTaco/bias-model-test-bench"
+requires-python = ">=3.7, <3.11"
+dependencies = [
+    "h5py",
+    "numpy=1.23.3",
+    "numba",
+    "matplotlib",
+    "scipy",
+    "pyaml",
+    "pyfftw",
+    "pylians=0.3",
+    "requests",
+    'importlib-metadata; python_version<"3.8"',
+]
+
+[tool.setuptools.packages.find]
+where = ["bias_bench"]
+
+[project.optional-dependencies]
+test = ['pytest']
