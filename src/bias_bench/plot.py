@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 def plot_bias_model_metrics(bias_model_data: Sequence[BiasModelData], bias_params: BiasParams):
     params = bias_params.data
 
-    plt.style.use(f"./plot_styles/{params['plotting_style']}")
+    #plt.style.use(f"./plot_styles/{params['plotting_style']}")
 
     # Make plots.
     if 'ngal_vs_rho' in params['plots']:
