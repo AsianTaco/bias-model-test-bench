@@ -33,7 +33,10 @@ dependencies = [
 repository = "https://github.com/AsianTaco/bias-model-test-bench"
 
 [tool.setuptools.packages.find]
-where = ["bias_bench"]
+where = ['bias_bench']
 
 [project.optional-dependencies]
 test = ['pytest']
+
+[project.scripts]
+benchmark = "bias_bench.console_scripts:run_test_bench"

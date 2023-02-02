@@ -6,8 +6,8 @@ from bias_bench.predict import predict_galaxy_counts
 
 import sys
 
-if __name__ == '__main__':
 
+def run_test_bench():
     param_file = sys.argv[1]
 
     # Load information from parameter file.
@@ -20,7 +20,7 @@ if __name__ == '__main__':
 
         # Predict counts using benchmark models.
         # TODO: extract this to separate post-processing function
-        if params.data[f'bias_model_{i+1}']["predict_counts_model"] is not None:
+        if params.data[f'bias_model_{i + 1}']["predict_counts_model"] is not None:
             predict_galaxy_counts(BM_list[-1], params)
 
     plot_bias_model_metrics(BM_list, params)
