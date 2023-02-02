@@ -17,21 +17,20 @@ classifiers = [
     'Programming Language :: Python :: 3',
 ]
 keywords = ['bias', 'testbench', 'python']
-[project.urls]
-repository = "https://github.com/AsianTaco/bias-model-test-bench"
 requires-python = ">=3.7, <3.11"
 dependencies = [
     "h5py",
-    "numpy=1.23.3",
-    "numba",
+    "numpy == 1.23.3",
     "matplotlib",
+    "numba",
     "scipy",
     "pyaml",
-    "pyfftw",
-    "pylians=0.3",
-    "requests",
-    'importlib-metadata; python_version<"3.8"',
+    "pyfftw == 0.13",
+    "pylians == 0.3",
 ]
+
+[project.urls]
+repository = "https://github.com/AsianTaco/bias-model-test-bench"
 
 [tool.setuptools.packages.find]
 where = ["bias_bench"]

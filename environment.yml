@@ -1,4 +1,4 @@
-name: test_bench_env
+name: test_bench
 channels:
   - conda-forge
   - defaults
@@ -13,5 +13,5 @@ dependencies:
   - pyaml
   - pip:
       - cython
-      - pyfftw==0.12
+      - pyfftw==0.13
       - pylians==0.3
