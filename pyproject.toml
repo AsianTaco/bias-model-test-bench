@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = 'bias_bench'
 version = '0.1'
 description = 'Test bench for halo and galaxy bias models'
-readme = 'README.MD'
+readme = 'README.md'
 
 authors = [
     { name = "Stuart McAlpine", email = "stuart.mcalpine@fysik.su.se" },
@@ -16,7 +16,7 @@ license = { file = 'LICENCE' }
 classifiers = [
     'Programming Language :: Python :: 3',
 ]
-keywords = ['bias', 'testbench', 'python']
+keywords = ['galaxy bias', 'testbench', 'simulations', 'python']
 requires-python = ">=3.7, <3.11"
 dependencies = [
     "h5py",
@@ -33,10 +33,10 @@ dependencies = [
 repository = "https://github.com/AsianTaco/bias-model-test-bench"
 
 [tool.setuptools.packages.find]
-where = ['bias_bench']
+where = ['src']
 
 [project.optional-dependencies]
 test = ['pytest']
 
 [project.scripts]
-benchmark = "bias_bench.console_scripts:run_test_bench"
+galaxy-bias-benchmark = "bias_bench.console_scripts:run_test_bench"
