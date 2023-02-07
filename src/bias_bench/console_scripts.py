@@ -1,8 +1,7 @@
-from bias_bench.io import BiasModelData
-from bias_bench.Params import BiasParams
-
-from bias_bench.plot import plot_bias_model_metrics
-from bias_bench.predict import predict_galaxy_counts
+from src.bias_bench.Params import BiasParams
+from src.bias_bench.data_io import BiasModelData
+from src.bias_bench.plot import plot_bias_model_metrics
+from src.bias_bench.predict import predict_galaxy_counts
 
 import sys
 
@@ -24,3 +23,7 @@ def run_test_bench():
             predict_galaxy_counts(BM_list[-1], params)
 
     plot_bias_model_metrics(BM_list, params)
+
+
+if __name__ == '__main__':
+    run_test_bench()

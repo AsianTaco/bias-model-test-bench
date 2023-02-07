@@ -2,6 +2,7 @@ import numpy as np
 import scipy
 from numba import njit
 
+
 @njit
 def _poisson_loop(ngal_mean):
     """
@@ -20,11 +21,12 @@ def _poisson_loop(ngal_mean):
     """
 
     ngal = np.zeros_like(ngal_mean)
-    
+
     for i in range(len(ngal)):
         ngal[i] = np.random.poisson(ngal_mean[i])
 
     return ngal
+
 
 def _get_mean_ngal(rho, nmean, beta, epsilon_g, rho_g):
     """
@@ -59,17 +61,18 @@ def _get_mean_ngal(rho, nmean, beta, epsilon_g, rho_g):
     idx = np.where(rho > -1.0)
 
     d = 1 + rho[idx]
-    x = (d / rho_g)**(-epsilon_g)
+    x = (d / rho_g) ** (-epsilon_g)
     ngal_mean[idx] = nmean * d ** beta * np.exp(-x)
 
     return ngal_mean
+
 
 class TruncatedPowerLaw:
 
     def fit(self, delta, count_field):
         # Fit using SciPy curvefit.
         popt, pcov = scipy.optimize.curve_fit(_get_mean_ngal, delta, count_field,
-                p0=[1., 1, 1, 0.5])
+                                              p0=[1., 1, 1, 0.5])
         print(f"Power law bias fit params: {popt}")
         return popt
 

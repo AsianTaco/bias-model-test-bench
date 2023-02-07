@@ -3,7 +3,7 @@ from typing import Sequence
 import matplotlib.pyplot as plt
 import numpy as np
 
-from bias_bench.io import BiasModelData
+from src.bias_bench.data_io import BiasModelData
 
 
 def plot_density_field(bias_model_list: Sequence[BiasModelData], params):
@@ -41,4 +41,4 @@ def plot_density_field(bias_model_list: Sequence[BiasModelData], params):
 
         fig.suptitle(bias_model_name)
         fig.tight_layout(rect=[0, 0.03, 1, 0.95])
-        fig.show()
+        fig.savefig(f"{params['out_dir']}/plots/density_fields_{bias_model_name}.png")

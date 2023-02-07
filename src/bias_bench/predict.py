@@ -1,6 +1,6 @@
-from bias_bench.io import BiasModelData
-from bias_bench.Params import BiasParams
-from bias_bench.benchmark_models.TruncatedPowerLaw import TruncatedPowerLaw
+from src.bias_bench.data_io import BiasModelData
+from src.bias_bench.Params import BiasParams
+from src.bias_bench.benchmark_models.TruncatedPowerLaw import TruncatedPowerLaw
 
 
 def predict_galaxy_counts(bias_model_data: BiasModelData, bias_params: BiasParams,

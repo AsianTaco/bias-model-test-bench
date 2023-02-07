@@ -69,7 +69,8 @@ def plot_power_spectrum(bias_model_list, params):
         ax.legend()
         fig.suptitle(bias_model_name)
         fig.tight_layout(rect=[0, 0.03, 1, 0.95])
-        fig.show()
+        # TODO: Correct naming
+        fig.savefig(f"{params['out_dir']}/plots/two_point_{bias_model_name}.png")
 
     ax_ratio.set_xlabel(r"$k$ [$h \ \mathrm{Mpc}^{-1}$]")
     ax_ratio.set_ylabel(r"$P(k) / P_{truth}(k)$ ")
@@ -77,4 +78,5 @@ def plot_power_spectrum(bias_model_list, params):
     ax_ratio.set_ylim(1e-1, 1e1)
     ax_ratio.legend()
     fig_ratio.tight_layout(pad=.1)
-    fig_ratio.show()
+    # TODO: Correct naming
+    fig_ratio.savefig(f"{params['out_dir']}/plots/two_point_ratios.png")

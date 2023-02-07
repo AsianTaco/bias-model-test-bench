@@ -4,7 +4,8 @@ DefaultParameter = {
     "plotting_style": "nature.mplstyle",
     "predict_counts": None,
     "power_spectrum": {'show_density': False, 'MAS': None},
-    "bi_spectrum": {'show_density': False, 'k1': 0.5, 'k2': 0.6, 'Ntheta': 25, 'MAS': None}
+    "bi_spectrum": {'show_density': False, 'k1': 0.5, 'k2': 0.6, 'Ntheta': 25, 'MAS': None},
+    "out_dir": '.',
 }
 
 DefaultSubParameter = {
@@ -41,6 +42,8 @@ class BiasParams:
 
     Optional IO parameters in YAML file
     -----------------------------------
+    out_dir : string
+        Path to the directory where the auxiliary files e.g. plots will be saved. Specified without trailing slash.
     overdensity_field_name : string
         HDF5 dataset name containing the dark matter overdensity field
         e.g, "refl0025n0376/ngrid32/density" for eagle.hdf5

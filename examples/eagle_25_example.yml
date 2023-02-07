@@ -21,6 +21,8 @@ plots:
   - bi_spectrum
   - ngal_vs_rho
   - density_images
+
+out_dir: ./examples
  
 power_spectrum:
   show_density: false

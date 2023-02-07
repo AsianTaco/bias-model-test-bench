@@ -4,7 +4,7 @@ import Pk_library as PKL
 import numpy as np
 import matplotlib.pyplot as plt
 
-from bias_bench.io import BiasModelData
+from src.bias_bench.data_io import BiasModelData
 
 
 def compute_bispectrum(field, Lbox, k1, k2, Ntheta, MAS):
@@ -68,4 +68,4 @@ def plot_bispectrum(bias_model_list: Sequence[BiasModelData], params):
         ax.legend()
         fig.suptitle(bias_model_name)
         fig.tight_layout(rect=[0, 0.03, 1, 0.95])
-        fig.show()
+        fig.savefig(f"{params['out_dir']}/plots/three_point_{bias_model_name}.png")

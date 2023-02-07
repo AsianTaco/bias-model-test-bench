@@ -1,18 +1,17 @@
+from pathlib import Path
 from typing import Sequence
-from bias_bench.io import BiasModelData
-from bias_bench.Params import BiasParams
-from bias_bench.analysis.one_point import plot_one_point_stats
-from bias_bench.analysis.three_point import plot_bispectrum
-from bias_bench.analysis.two_point import plot_power_spectrum
-from bias_bench.analysis.images import plot_density_field
 
-import matplotlib.pyplot as plt
+from src.bias_bench.data_io import BiasModelData
+from src.bias_bench.Params import BiasParams
+from src.bias_bench.analysis import *
 
 
 def plot_bias_model_metrics(bias_model_data: Sequence[BiasModelData], bias_params: BiasParams):
     params = bias_params.data
 
-    #plt.style.use(f"./plot_styles/{params['plotting_style']}")
+    Path(f"{params['out_dir']}/plots").mkdir(parents=True, exist_ok=True)
+
+    # plt.style.use(f"./plot_styles/{params['plotting_style']}")
 
     # Make plots.
     if 'ngal_vs_rho' in params['plots']:
