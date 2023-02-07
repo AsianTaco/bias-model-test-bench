@@ -23,7 +23,7 @@ def plot_one_point_stats(bias_model_list, params):
         bias_model_name = params[f'bias_model_{bias_model_index + 1}']['name']
         benchmark_model_name = params[f'bias_model_{bias_model_index + 1}']['count_field_benchmark_name']
 
-        fig, axs = plt.subplots(2, figsize=(3, 5))
+        fig, axs = plt.subplots(2, figsize=(5, 7))
 
         overdensity_field_flat = bias_model_data.overdensity_field.flatten()
 
@@ -50,16 +50,18 @@ def plot_one_point_stats(bias_model_list, params):
             print("No benchmark count field found in BiasModelData. Skipping plots")
 
         # Finalize figure.
-        axs[0].axhline(n_gal_zero, label='$n_{gal}=0$')
+        axs[0].axhline(n_gal_zero, color='0.8', linestyle='--', label='$n_{gal}=0$')
         axs[0].set_xlabel(r"1 + $\delta$")
         axs[0].set_ylabel("Counts")
         axs[0].loglog()
         axs[0].set_xlim(1e-3, 1e3)
         axs[0].set_ylim(bottom=0)
-        axs[0].legend()
+        axs[0].legend(loc='upper center', bbox_to_anchor=(0.5, -0.3),
+          fancybox=True, shadow=True, ncol=5)
         axs[1].set_xscale('log')
         axs[1].set_xlabel(r"1 + $\delta$")
-        axs[1].legend()
+        axs[1].legend(loc='upper center', bbox_to_anchor=(0.5, -0.3),
+          fancybox=True, shadow=True, ncol=5)
         fig.suptitle(bias_model_name)
         fig.tight_layout(rect=[0, 0.03, 1, 0.95])
         fig.savefig(f"{params['out_dir']}/plots/one_point_{bias_model_name}.png")
