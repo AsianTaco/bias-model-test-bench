@@ -1,7 +1,7 @@
-from src.bias_bench.Params import BiasParams
-from src.bias_bench.data_io import BiasModelData
-from src.bias_bench.plot import plot_bias_model_metrics
-from src.bias_bench.predict import predict_galaxy_counts
+from bias_bench.Params import BiasParams
+from bias_bench.data_io import BiasModelData
+from bias_bench.plot import plot_bias_model_metrics
+from bias_bench.predict import predict_galaxy_counts
 
 import sys
 

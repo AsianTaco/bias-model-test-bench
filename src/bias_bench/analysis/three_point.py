@@ -4,7 +4,7 @@ import Pk_library as PKL
 import numpy as np
 import matplotlib.pyplot as plt
 
-from src.bias_bench.data_io import BiasModelData
+from bias_bench.data_io import BiasModelData
 
 
 def compute_bispectrum(field, Lbox, k1, k2, Ntheta, MAS):

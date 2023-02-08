@@ -1,9 +1,9 @@
 from pathlib import Path
 from typing import Sequence
 
-from src.bias_bench.data_io import BiasModelData
-from src.bias_bench.Params import BiasParams
-from src.bias_bench.analysis import *
+from bias_bench.data_io import BiasModelData
+from bias_bench.Params import BiasParams
+from bias_bench.analysis import *
 
 
 def plot_bias_model_metrics(bias_model_data: Sequence[BiasModelData], bias_params: BiasParams):

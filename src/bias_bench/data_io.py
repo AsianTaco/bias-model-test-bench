@@ -1,7 +1,7 @@
 import h5py
 import numpy as np
 
-from Params import BiasParams
+from bias_bench.Params import BiasParams
 
 
 class BiasModelData:
