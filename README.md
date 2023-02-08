@@ -53,9 +53,9 @@ Expected HDF5 file which contains:
 
 Expected data sets:
 
-- Dark matter over-density field $\rho / \bar{\rho} - 1$
-- Optional: Predicted count field ($ N_{gal} \text{or} N_{halo} $)
-- Optional: Ground truth count field ($ N_{gal} \text{or} N_{halo} $)
+- Dark matter over-density field
+- Optional: Predicted count field (galaxy or halo count)
+- Optional: Ground truth count field (galaxy or halo count)
 
 Expected attributes:
 
