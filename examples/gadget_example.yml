@@ -7,7 +7,7 @@ bias_model_1:
   count_field_name: halo_count_predicted/all_masses
   predict_counts_model: truncated_power_law
 
-  name: 'all masses'
+  name: 'Neural Physical Engine'
 
 plots:
   - power_spectrum
