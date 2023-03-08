@@ -68,7 +68,7 @@ A comprehensive config file with all possible fields can be found in at **exampl
 
 ## Bias challenge spring 2023
 
-The training and validation data sets are available on the [Aquila NextCloud](https://cloud.aquila-consortium.org/s/bGygxPzZLsksbZQ).
+The training and validation data sets are available on the [Aquila NextCloud](https://cloud.aquila-consortium.org/s/2Kx95iy28EPfGkk).
 
 ### Training data
 The HDF5 file containing the training data can be found in the folder **Training Data** and will conform to the structure described in the section above.
