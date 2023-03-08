@@ -66,6 +66,27 @@ Note:
 The config file specifies the setup of the HDF5 file that is to be digested and also controls the plotting setup.
 A comprehensive config file with all possible fields can be found in at **example/full_config.yml**
 
+## Bias challenge spring 2023
+
+The training and validation data sets are available on the [Aquila NextCloud](https://cloud.aquila-consortium.org/s/bGygxPzZLsksbZQ).
+
+### Training data
+The HDF5 file containing the training data can be found in the folder **Training Data** and will conform to the structure described in the section above.
+
+Participants are encouraged to use the test bench during training to check their model performance using the different metrics that are provided with this package.
+Simply add the predicted count field of your model as the *'counts_predicted_bin_{$number_of_mass_bin}'* datasets to the HDF5 file and run it with a corresponding YAML config.
+It can also be useful to see how well it performs against other bias models such as the *truncated power law* (See section below on **Build-in bias models**).
+
+### Validation data
+
+The folder **Validation Data** contains another HDF5 file conforming to the test bench structure but containing only the dark matter overdensity fields.
+
+Participants should add their predicted halo count fields for those dark matter overdensities respectively as dataset fields to the HDF5 file.
+Please make sure to follow the naming convention *'counts_predicted_bin_{$number_of_mass_bin}'*
+
+The resulting HDF5 file should then be uploaded **before April 17th 2023, 13:00 PM CET** via this [NextCloud upload link](https://cloud.aquila-consortium.org/s/ZPZpeHqRFiXedCe).
+**Please** name the file accordingly, so we can identify who the author of the model is.  
+
 ## Build-in bias models
 
 The test bench already comes with some implemented bias models that can be used out of the box.
