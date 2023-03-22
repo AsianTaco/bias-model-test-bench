@@ -26,7 +26,7 @@ Then again, install all dependencies and the package using
 pip install -e .
 ```
 
-### Test installation
+### Test installation (Currently not working)
 
 You can test the installation by running the entry point script via
 
@@ -39,7 +39,14 @@ If the script ran successfully, you should be able to inspect some plots located
 ## Usage
 
 For a fully automatic run using the command line, the test bench expects a HDF5 file containing the data and a configuration YAML-file.
-Checkout the **mock_data/** and **example/** folders for some examples.
+Checkout the configuration in the **example/** folders. After downloading the training data from the Nextcloud (See the challenge section below),
+one can run the commandline command:
+
+```bash
+galaxy-bias-benchmark examples/example_config.yml
+```
+
+Make sure to have set the correct path to the *.hdf5* file.
 
 ### HDF5 file structure
 

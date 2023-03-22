@@ -1,0 +1,31 @@
+num_bias_models: 1
+
+bias_model_1:
+  hdf5_file_path: bias_challenge/data/data.hdf5
+  simulation_group_name: aquila_bias_challenge_training
+  n_simulations: 11
+  n_res: 4
+  n_mass_bins: 6
+
+#  predict_counts_model: truncated_power_law
+  predict_counts_model:
+  name: 'bias_challenge'
+
+plots:
+  - power_spectrum
+  - bi_spectrum
+  - ngal_vs_rho
+  - density_images
+
+out_dir: ./examples
+ 
+power_spectrum:
+  show_density: false
+  MAS:
+
+bi_spectrum:
+  show_density: false
+  k1: 0.5
+  k2: 0.6
+  Ntheta: 25
+  MAS:

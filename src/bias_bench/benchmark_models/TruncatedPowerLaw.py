@@ -2,6 +2,8 @@ import numpy as np
 import scipy
 from numba import njit
 
+from bias_bench.utils import bias_bench_print
+
 
 @njit
 def _poisson_loop(ngal_mean):
@@ -72,8 +74,8 @@ class TruncatedPowerLaw:
     def fit(self, delta, count_field):
         # Fit using SciPy curvefit.
         popt, pcov = scipy.optimize.curve_fit(_get_mean_ngal, delta, count_field,
-                                              p0=[1., 1, 1, 0.5])
-        print(f"Power law bias fit params: {popt}")
+                                              p0=[1., 1, 1, 0.5], maxfev=2000)
+        bias_bench_print(f"Power law bias fit params: {popt}")
         return popt
 
     def predict(self, delta, popt):

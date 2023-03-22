@@ -13,16 +13,17 @@ def run_test_bench():
     params = BiasParams(param_file)
 
     # Load data.
-    BM_list = []
+    bias_models = []
     for i in range(params.data['num_bias_models']):
-        BM_list.append(BiasModelData(params, model_index=i + 1))
+        bias_model_id = i + 1
+        bias_models.append(BiasModelData(params, model_index=bias_model_id))
 
         # Predict counts using benchmark models.
         # TODO: extract this to separate post-processing function
-        if params.data[f'bias_model_{i + 1}']["predict_counts_model"] is not None:
-            predict_galaxy_counts(BM_list[-1], params)
+        if params.data[f'bias_model_{bias_model_id}']["predict_counts_model"] is not None:
+            predict_galaxy_counts(bias_models[i], params, which_model=bias_model_id)
 
-    plot_bias_model_metrics(BM_list, params)
+    plot_bias_model_metrics(bias_models, params)
 
 
 if __name__ == '__main__':
