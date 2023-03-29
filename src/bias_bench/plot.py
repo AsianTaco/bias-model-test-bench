@@ -12,6 +12,7 @@ def plot_bias_model_metrics(bias_model_data: Sequence[BiasModelData], bias_param
     parent_folder_path = f"{params['out_dir']}/plots"
     Path(parent_folder_path).mkdir(parents=True, exist_ok=True)
 
+    # FIXME: enable plotting style files
     # plt.style.use(f"./plot_styles/{params['plotting_style']}")
 
     # Make plots.
@@ -22,8 +23,10 @@ def plot_bias_model_metrics(bias_model_data: Sequence[BiasModelData], bias_param
         plot_one_point_stats(bias_model_data, params, dir_path)
 
     # FIXME: make other plotting routines work again
-    # if 'power_spectrum' in params['plots']:
-    #     plot_power_spectrum(bias_model_data, params)
+    if 'power_spectrum' in params['plots']:
+        dir_path = f"{parent_folder_path}/two_point"
+        Path(dir_path).mkdir(parents=True, exist_ok=True)
+        plot_power_spectrum(bias_model_data, params, dir_path)
     # if 'bi_spectrum' in params['plots']:
     #     plot_bispectrum(bias_model_data, params)
     # if 'density_images' in params['plots']:

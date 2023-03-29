@@ -11,7 +11,8 @@ def predict_galaxy_counts(bias_model_data: BiasModelData, bias_params: BiasParam
     params = bias_params.data
 
     _allowed_benchmark_models = ['truncated_power_law']
-    assert params[f'bias_model_{which_model}']['predict_counts_model'] in _allowed_benchmark_models
+    benchmark_model_name = params[f'bias_model_{which_model}']['predict_counts_model']
+    assert benchmark_model_name in _allowed_benchmark_models
 
     counts_field_benchmark = []
     n_benchmark_fits = 0
@@ -23,9 +24,13 @@ def predict_galaxy_counts(bias_model_data: BiasModelData, bias_params: BiasParam
             counts_field_benchmark_per_res_and_mass_bin = []
 
             for mass_bin_i in range(bias_model_data.n_mass_bins):
-                counts_flat = bias_model_data.count_fields_truth[sim_i][res_i][mass_bin_i].flatten()
 
-                if params[f'bias_model_{which_model}']['predict_counts_model'] == "truncated_power_law":
+                try:
+                    counts_flat = bias_model_data.count_fields_truth[sim_i][res_i][mass_bin_i].flatten()
+                except IndexError:
+                    print(f"No truth count field found. Skipping fit with {benchmark_model_name}.")
+
+                if benchmark_model_name == "truncated_power_law":
                     pl_model = TruncatedPowerLaw()
 
                     # Fit ngal vs delta relation.
