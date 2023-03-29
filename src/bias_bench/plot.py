@@ -18,7 +18,7 @@ def plot_bias_model_metrics(bias_model_data: Sequence[BiasModelData], bias_param
     # TODO: Add functionality to plot the mean quantities over all simulations
     if 'ngal_vs_rho' in params['plots']:
         dir_path = f"{parent_folder_path}/one_point"
-        Path().mkdir(parents=True, exist_ok=True)
+        Path(dir_path).mkdir(parents=True, exist_ok=True)
         plot_one_point_stats(bias_model_data, params, dir_path)
 
     # FIXME: make other plotting routines work again
