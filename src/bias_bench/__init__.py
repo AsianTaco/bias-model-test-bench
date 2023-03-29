@@ -6,3 +6,5 @@ except ImportError:
     import importlib_metadata as metadata
 
 __version__ = metadata.version("bias_bench")
+
+from bias_bench.utils import add_count_fields_to_hdf5
