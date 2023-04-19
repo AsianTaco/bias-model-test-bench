@@ -73,10 +73,13 @@ class TruncatedPowerLaw:
 
     def fit(self, delta, count_field):
         # Fit using SciPy curvefit.
-        popt, pcov = scipy.optimize.curve_fit(_get_mean_ngal, delta, count_field,
-                                              p0=[1., 1, 1, 0.5], maxfev=2000)
-        bias_bench_print(f"Power law bias fit params: {popt}")
-        return popt
+        try:
+            popt, pcov = scipy.optimize.curve_fit(_get_mean_ngal, delta, count_field, p0=[1., 1, 1, 0.5], maxfev=4000)
+            bias_bench_print(f"Power law bias fit params: {popt}")
+            return popt
+        except RuntimeError:
+            return None
+
 
     def predict(self, delta, popt):
         # Predict expected value ngal from delta_dm (and model params popt).

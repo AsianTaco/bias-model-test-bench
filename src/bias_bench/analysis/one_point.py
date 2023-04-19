@@ -78,7 +78,7 @@ def plot_one_point_stats(bias_model_list: Sequence[BiasModelData], params, dir_p
                         bins, mean, var = _compute_mean_and_variance(log_dm_overdensity_flat, benchmark.flatten())
                         axs[1].plot(bins, mean, c='tab:purple', lw=1, linestyle='dashed')
                         axs[1].plot(bins, var, c='tab:purple', lw=1, linestyle='dotted')
-                    except IndexError:
+                    except (IndexError, AttributeError):
                         print("No benchmark count field found in BiasModelData. Skipping plots")
 
                 # Finalize figure.
@@ -117,11 +117,11 @@ def plot_one_point_stats(bias_model_list: Sequence[BiasModelData], params, dir_p
                 field_attrs = bias_model_data.info[f'{res_base_name}_{res_i}']
                 box = field_attrs[box_size_attr]
                 ngrid = field_attrs[n_grid_attr]
-                # FIXME: remove the hard-coded mass_bin string
+                # FIXME: remove the hard-coded mass_bin key string
                 mass_lo_hi = [f'{n:.2e}' for n in field_attrs[f'mass_bin_{mass_bin_i}']]
                 resolution = box / ngrid
                 fig.suptitle(
                     f'{bias_model_name} for \n'
-                    f'{resolution:.2f}$h^{{-1}}\\mathrm{{Mpc}}^3$ and mass bins {mass_lo_hi}')
+                    f'voxel size {resolution:.2f}$h^{{-1}}\\mathrm{{Mpc}}^3$ and mass bins {mass_lo_hi}')
                 fig.tight_layout(rect=[0, 0.03, 1, 0.95])
                 fig.savefig(f"{dir_path}/one_point_{bias_model_name}_res_{res_i}_mass_{mass_bin_i}.png")

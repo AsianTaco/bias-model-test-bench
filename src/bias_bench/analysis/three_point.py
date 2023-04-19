@@ -84,13 +84,20 @@ def plot_bispectrum(bias_model_list: Sequence[BiasModelData], params, dir_path):
                             ax_ratio.loglog(k_truth, bispec_benchmark['bispectrum'] / bispec_truth['bispectrum'],
                                             label=f'{benchmark_model_name}')
 
-                    except AttributeError:
+                    except (IndexError, AttributeError, TypeError):
                         print("No benchmark count field found in BiasModelData. Skipping plots")
 
                 ax.set_xlabel(r"Angle $\theta$")
                 ax.set_ylabel(r"$B(k)$ [$h^{-3}\mathrm{Mpc}^3$]")
                 ax.legend()
-                fig.suptitle(bias_model_name)
+                field_attrs = bias_model_data.info[f'{res_base_name}_{res_i}']
+                box = field_attrs[box_size_attr]
+                ngrid = field_attrs[n_grid_attr]
+                # FIXME: remove the hard-coded mass_bin key string
+                mass_lo_hi = [f'{n:.2e}' for n in field_attrs[f'mass_bin_{mass_bin_i}']]
+                resolution = box / ngrid
+                fig.suptitle(f'{bias_model_name} for\n'
+                             f'voxel size {resolution:.2f}$h^{{-1}}\\mathrm{{Mpc}}^3$ and mass bins {mass_lo_hi}')
                 fig.tight_layout(rect=[0, 0.03, 1, 0.95])
                 fig.savefig(f"{dir_path}/{bias_model_name}_res_{res_i}_mass_{mass_bin_i}.png")
 
