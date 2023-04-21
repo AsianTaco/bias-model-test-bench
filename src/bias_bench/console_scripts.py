@@ -26,5 +26,26 @@ def run_test_bench():
     plot_bias_model_metrics(bias_models, params)
 
 
+def optimise_borg_bias():
+    param_file = sys.argv[1]
+
+    # Load information from parameter file.
+    params = BiasParams(param_file)
+
+    print(params.data)
+    bias_model = BiasModelData(params, model_index=1)
+    print(bias_model.params)
+
+    # # Load data.
+    # bias_models = []
+    # for i in range(params.data['num_bias_models']):
+    #     bias_model_id = i + 1
+    #     bias_models.append(BiasModelData(params, model_index=bias_model_id))
+    #     #TMP: As far as I understand, bias_models here is is one piece of data + predictions. It has 3 attributes,
+    #     #     namely: - overdensity_field (3d array [Ngrid,Ngrid,Ngrid]), # dm overdensity field
+    #     #             - count_field (3d array [Ngrid,Ngrid,Ngrid]),       # predicted count field
+    #     #             - count_field_truth (3d array [Ngrid,Ngrid,Ngrid])  # ground truth
+
+
 if __name__ == '__main__':
     run_test_bench()
