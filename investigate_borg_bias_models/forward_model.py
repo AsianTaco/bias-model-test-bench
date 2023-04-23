@@ -26,6 +26,18 @@ def read_data(filename, seed, reskeys=None, fields=None):
     f.close()
     return data
 
+def add_prediction_to_data(filename, seed, reskey_id, field_id, prediction):
+    f = h5py.File(filename, mode='r+')
+    group = f[seed]
+    reskey = "res_{}".format(reskey_id)
+    group[reskey]["counts_predicted_bin_{}".format(field_id)] = prediction
+    field = group[reskey]["counts_bin_{}".format(field_id)]
+    for key in field.attrs.keys():
+        group[reskey]["counts_predicted_bin_{}".format(field_id)].attrs[key] = field.attrs[key]
+    f.close()
+    # TODO: make this more efficient (e.g. add multiple predictions/mass bins at once
+    #       instead of opening and closing the file for each individual prediction)
+
 class BiasModelBORG:
     def __init__(self, model_name, filename=train, av_seeds=av_seeds, bins_keys=bins_keys,
                  reskeys=None, fields_to_load=None, default_data_seed=0):

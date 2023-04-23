@@ -57,7 +57,7 @@ def plot_bispectrum(bias_model_list: Sequence[BiasModelData], params, dir_path):
                         k_truth, bispec_truth = compute_bispectrum(count_overdensity_truth, l_box, k1, k2, Ntheta,
                                                                    MAS=MAS)
                         ax.loglog(k_truth, bispec_truth['bispectrum'], label='ground truth')
-                        ground_truth_field_exists = True
+                        # ground_truth_field_exists = True
                     except IndexError:
                         print("No ground truth count field found in BiasModelData. Skipping plots")
 
