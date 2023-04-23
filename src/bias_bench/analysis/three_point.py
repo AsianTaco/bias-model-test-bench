@@ -75,7 +75,7 @@ def plot_bispectrum(bias_model_list: Sequence[BiasModelData], params, dir_path):
 
                     try:
                         count_field_benchmark = bias_model_data.counts_field_benchmark[sim_i][res_i][mass_bin_i]
-                        count_overdensity_benchmark = count_field_benchmark / np.mean(count_field_benchmark) - 1
+                        count_overdensity_benchmark = count_field_benchmark / count_field_benchmark.mean() - 1
                         k_benchmark, bispec_benchmark = compute_bispectrum(count_overdensity_benchmark, l_box, k1, k2,
                                                                            Ntheta, MAS=MAS)
                         ax.loglog(k_benchmark, bispec_benchmark['bispectrum'], label=benchmark_model_name)

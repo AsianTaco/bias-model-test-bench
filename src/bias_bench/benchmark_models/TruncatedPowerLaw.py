@@ -3,6 +3,7 @@ import scipy
 from numba import njit
 
 from bias_bench.utils import bias_bench_print
+from bias_bench.benchmark_models.BenchmarkModel import BenchmarkModel
 
 
 @njit
@@ -69,24 +70,28 @@ def _get_mean_ngal(rho, nmean, beta, epsilon_g, rho_g):
     return ngal_mean
 
 
-class TruncatedPowerLaw:
+class TruncatedPowerLaw(BenchmarkModel):
+
+    def __init__(self):
+        super().__init__("Truncated Power Law")
 
     def fit(self, delta, count_field):
-        # Fit using SciPy curvefit.
+        # TODO: replace this by scipy optimise with Newton-CG and Poisson loss
+        delta = delta.flatten()
+        count_field = count_field.flatten()
         try:
-            popt, pcov = scipy.optimize.curve_fit(_get_mean_ngal, delta, count_field, p0=[1., 1, 1, 0.5], maxfev=4000)
+            popt, pcov = scipy.optimize.curve_fit(_get_mean_ngal, delta, count_field, p0=[1., 1, 1, 0.5], maxfev=2000)
             bias_bench_print(f"Power law bias fit params: {popt}")
             return popt
         except RuntimeError:
             return None
 
-
-    def predict(self, delta, popt):
+    def predict_poisson_intensity(self, delta, popt):
         # Predict expected value ngal from delta_dm (and model params popt).
-        ngal = _get_mean_ngal(delta, *popt)
+        ngal = _get_mean_ngal(delta.flatten(), *popt)
         return ngal
 
-    def sample(self, delta, popt):
+    def predict(self, delta, popt):
         # Poisson sample ngal from delta_dm around ngal mean (and model params popt).
-        ngal_mean = self.predict(delta, popt)
-        return _poisson_loop(ngal_mean)
+        ngal_mean = self.predict_poisson_intensity(delta, popt)
+        return _poisson_loop(ngal_mean).reshape(delta.shape)
