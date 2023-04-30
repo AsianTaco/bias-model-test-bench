@@ -42,7 +42,7 @@ def predict_galaxy_counts(bias_model_data: BiasModelData, bias_params: BiasParam
                 except IndexError:
                     print(f"No truth count field found. Skipping fit with {benchmark_model_name}.")
                     counts_fields_truth = None
-                    break
+                    return
 
             overdensities = np.array(overdensities)
             counts_fields_truth = np.array(counts_fields_truth)
