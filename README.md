@@ -73,26 +73,31 @@ Note:
 The config file specifies the setup of the HDF5 file that is to be digested and also controls the plotting setup.
 A comprehensive config file with all possible fields can be found in at **example/full_config.yml**
 
-## Bias challenge spring 2023
+### Extended example with pre-processed training set
 
+In order to more easily test a new bias model, we have created a curated training set from the existing [Quijote simulations](https://quijote-simulations.readthedocs.io/en/latest/).
 The training and validation data sets are available on the [Aquila NextCloud](https://cloud.aquila-consortium.org/s/2Kx95iy28EPfGkk).
 
-### Training data
+#### Training data
 The HDF5 file containing the training data can be found in the folder **Training Data** and will conform to the structure described in the section above.
+It contains:
 
-Participants are encouraged to use the test bench during training to check their model performance using the different metrics that are provided with this package.
+- 10 Quijote DM-only simulations
+- Mass resolution: to (Divided into 6 mass bins) 10^12 $M_/sun$ 𝑀☉ 1015 𝑀☉
+- Density fields at 4 grid resolutions (voxels of 4 Mpc/h, 8 Mpc/h, 16 Mpc/h, 32 Mpc/h)
+- Gridded halo count fields at 4 resolutions and for 6 different mass bins each
+- Include central and satellite halos (don't differ between them)
+
+The test bench can be used during training to check their model performance using the different metrics that are provided with this package.
 Simply add the predicted count field of your model as the *'counts_predicted_bin_{$number_of_mass_bin}'* datasets to the HDF5 file and run it with a corresponding YAML config.
+
+```python
+import bias_bench as bb
+
+bb.add_count_fields_to_hdf5(path_to_hdf5, "aquila_bias_challenge_training", count_fields, mass_bins, is_ground_truth=False)
+```
+
 It can also be useful to see how well it performs against other bias models such as the *truncated power law* (See section below on **Build-in bias models**).
-
-### Validation data
-
-The folder **Validation Data** contains another HDF5 file conforming to the test bench structure but containing only the dark matter overdensity fields.
-
-Participants should add their predicted halo count fields for those dark matter overdensities respectively as dataset fields to the HDF5 file.
-Please make sure to follow the naming convention *'counts_predicted_bin_{$number_of_mass_bin}'*
-
-The resulting HDF5 file should then be uploaded **before April 17th 2023, 13:00 PM CET** via this [NextCloud upload link](https://cloud.aquila-consortium.org/s/ZPZpeHqRFiXedCe).
-**Please** name the file accordingly, so we can identify who the author of the model is.  
 
 ## Build-in bias models
 
@@ -101,6 +106,11 @@ The test bench already comes with some implemented bias models that can be used 
 ### Truncated power law (https://arxiv.org/abs/1309.6641)
 
 A non-linear local bias model parameterized by 4 parameters by Neyrinck, M., et al. (2014)
+
+### BORG bias models (TBD)
+
+Coming soon..
+
 
 ## Plotting options
 
