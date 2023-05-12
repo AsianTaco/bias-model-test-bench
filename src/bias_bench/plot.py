@@ -5,6 +5,8 @@ from bias_bench.data_io import BiasModelData
 from bias_bench.Params import BiasParams
 from bias_bench.analysis import *
 
+import matplotlib.pyplot as plt
+
 
 def plot_bias_model_metrics(bias_model_data: Sequence[BiasModelData], bias_params: BiasParams):
     params = bias_params.data
@@ -13,7 +15,7 @@ def plot_bias_model_metrics(bias_model_data: Sequence[BiasModelData], bias_param
     Path(parent_folder_path).mkdir(parents=True, exist_ok=True)
 
     # FIXME: enable plotting style files
-    # plt.style.use(f"./plot_styles/{params['plotting_style']}")
+    plt.style.use(f"./plot_styles/{params['plotting_style']}")
 
     # Make plots.
     # TODO: Add functionality to plot the mean quantities over all simulations
