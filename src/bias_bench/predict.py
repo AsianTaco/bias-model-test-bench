@@ -38,6 +38,7 @@ def predict_galaxy_counts(bias_model_data: BiasModelData, bias_params: BiasParam
                     # TODO: Implement try-expect to make this faster
                     # TODO: batch optimise over the differently seeded simulations
                     fitted_params = pl_model.fit(overdensity_flat, counts_flat)
+                    print(f"Fitted params: \n {fitted_params}")
 
                     if fitted_params is None:
                         print(f"Was not able to fit model for sim_{sim_i}, res_{res_i}, mass_bin_{mass_bin_i}")
