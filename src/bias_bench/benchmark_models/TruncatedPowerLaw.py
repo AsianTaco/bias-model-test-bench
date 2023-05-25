@@ -1,33 +1,7 @@
 import numpy as np
 import scipy
-from numba import njit
 
 from bias_bench.utils import bias_bench_print
-
-
-@njit
-def _poisson_loop(ngal_mean):
-    """
-    Predict the actual number of galaxies, given the expected number, using
-    Poisson sampling.
-
-    Parameters
-    ----------
-    ngal_mean : ndarray
-        Expected number of galaxies
-
-    Returns
-    -------
-    ngal : ndarray
-        Predicted galaxy counts
-    """
-
-    ngal = np.zeros_like(ngal_mean)
-
-    for i in range(len(ngal)):
-        ngal[i] = np.random.poisson(ngal_mean[i])
-
-    return ngal
 
 
 def _get_mean_ngal(rho, nmean, beta, epsilon_g, rho_g):
@@ -80,7 +54,6 @@ class TruncatedPowerLaw:
         except RuntimeError:
             return None
 
-
     def predict(self, delta, popt):
         # Predict expected value ngal from delta_dm (and model params popt).
         ngal = _get_mean_ngal(delta, *popt)
@@ -89,4 +62,4 @@ class TruncatedPowerLaw:
     def sample(self, delta, popt):
         # Poisson sample ngal from delta_dm around ngal mean (and model params popt).
         ngal_mean = self.predict(delta, popt)
-        return _poisson_loop(ngal_mean)
+        return np.random.poisson(ngal_mean)
