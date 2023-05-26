@@ -24,7 +24,7 @@ def add_count_fields_to_hdf5(file_path: str, group_name: str, count_fields: np.n
             dset.attrs.create(mass_bin_right_attr, mass_bins[i + 1])
 
         if all_mass_bin:
-            dset = f.create_dataset(f"{data_set_base_name}_{len(mass_bins)}", data=count_fields[-1])
+            dset = f.create_dataset(f"{data_set_base_name}_{len(mass_bins) - 1}", data=count_fields[-1])
 
             dset.attrs.create(mass_bin_left_attr, mass_bins[0])
             dset.attrs.create(mass_bin_right_attr, np.inf)

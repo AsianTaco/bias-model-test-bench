@@ -48,6 +48,11 @@ class TruncatedPowerLaw:
     def fit(self, delta, count_field):
         # Fit using SciPy curvefit.
         try:
+            # Use scipy minimize to fit with poisson loss
+            # res = minimize(self._Poisson_loss, initial_guess, method="L-BFGS-B", callback=self._callback,
+            #                 tol=1e-10,
+            #                 bounds=bounds[bias_model],
+            #                 options={'disp': True, 'eps':1e-5, 'finite_diff_rel_step': 1e-5})
             popt, pcov = scipy.optimize.curve_fit(_get_mean_ngal, delta, count_field, p0=[1., 1, 1, 0.5], maxfev=4000)
             bias_bench_print(f"Power law bias fit params: {popt}")
             return popt

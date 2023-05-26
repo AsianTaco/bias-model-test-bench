@@ -25,6 +25,8 @@ one_point:
 power_spectrum:
   show_density: false
   MAS:
+  x_lim: [ 0, 1.5 ]
+  y_lim: [ -0.5, 3 ]
 
 bi_spectrum:
   show_density: false
