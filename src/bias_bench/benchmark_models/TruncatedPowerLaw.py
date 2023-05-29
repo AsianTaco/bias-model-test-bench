@@ -1,34 +1,8 @@
 import numpy as np
 import scipy
-from numba import njit
 
 from bias_bench.utils import bias_bench_print
 from bias_bench.benchmark_models.BenchmarkModel import BenchmarkModel
-
-
-@njit
-def _poisson_loop(ngal_mean):
-    """
-    Predict the actual number of galaxies, given the expected number, using
-    Poisson sampling.
-
-    Parameters
-    ----------
-    ngal_mean : ndarray
-        Expected number of galaxies
-
-    Returns
-    -------
-    ngal : ndarray
-        Predicted galaxy counts
-    """
-
-    ngal = np.zeros_like(ngal_mean)
-
-    for i in range(len(ngal)):
-        ngal[i] = np.random.poisson(ngal_mean[i])
-
-    return ngal
 
 
 def _get_mean_ngal(rho, nmean, beta, epsilon_g, rho_g):
@@ -80,7 +54,12 @@ class TruncatedPowerLaw(BenchmarkModel):
         delta = delta.flatten()
         count_field = count_field.flatten()
         try:
-            popt, pcov = scipy.optimize.curve_fit(_get_mean_ngal, delta, count_field, p0=[1., 1, 1, 0.5], maxfev=2000)
+            # Use scipy minimize to fit with poisson loss
+            # res = minimize(self._Poisson_loss, initial_guess, method="L-BFGS-B", callback=self._callback,
+            #                 tol=1e-10,
+            #                 bounds=bounds[bias_model],
+            #                 options={'disp': True, 'eps':1e-5, 'finite_diff_rel_step': 1e-5})
+            popt, pcov = scipy.optimize.curve_fit(_get_mean_ngal, delta, count_field, p0=[1., 1, 1, 0.5], maxfev=4000)
             bias_bench_print(f"Power law bias fit params: {popt}")
             return popt
         except RuntimeError:
@@ -94,4 +73,4 @@ class TruncatedPowerLaw(BenchmarkModel):
     def predict(self, delta, popt):
         # Poisson sample ngal from delta_dm around ngal mean (and model params popt).
         ngal_mean = self.predict_poisson_intensity(delta, popt)
-        return _poisson_loop(ngal_mean).reshape(delta.shape)
+        return np.random.poisson(ngal_mean)

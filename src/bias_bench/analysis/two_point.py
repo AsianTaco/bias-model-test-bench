@@ -52,9 +52,10 @@ def plot_power_spectrum(bias_model_list: Sequence[BiasModelData], params, dir_pa
 
                     try:
                         count_field = bias_model_data.count_fields_predicted[sim_i][res_i][mass_bin_i]
+                        # TODO: generalize this for many realizations
                         count_overdensity = count_field / np.mean(count_field) - 1
                         k_counts, power_counts = compute_power_spectrum(count_overdensity, l_box, MAS=MAS)
-                        ax.loglog(k_counts, power_counts, label='predicted')
+                        ax.loglog(k_counts, power_counts, label='my model')
 
                         if ground_truth_field_exists:
                             ax_ratio.loglog(k_truth, power_counts / power_truth, label=f'predicted ({bias_model_name})')
@@ -84,8 +85,8 @@ def plot_power_spectrum(bias_model_list: Sequence[BiasModelData], params, dir_pa
                 # FIXME: remove the hard-coded mass_bin key string
                 mass_lo_hi = [f'{n:.2e}' for n in field_attrs[f'mass_bin_{mass_bin_i}']]
                 resolution = box / ngrid
-                fig.suptitle(f'{bias_model_name} for\n'
-                             f'voxel size {resolution:.2f}$h^{{-1}}\\mathrm{{Mpc}}^3$ and mass bins {mass_lo_hi}')
+                fig.suptitle(f'Power spectrum comparison for \n'
+                             f'halo masses between ${mass_lo_hi[0]} M_\\odot$ and ${mass_lo_hi[1]} M_\\odot$')
                 fig.tight_layout(rect=[0, 0.03, 1, 0.95])
                 fig.savefig(f"{dir_path}/{bias_model_name}_res_{res_i}_mass_{mass_bin_i}.png")
 

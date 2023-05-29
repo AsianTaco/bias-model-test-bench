@@ -1,7 +1,7 @@
 import yaml
 
 DefaultParameter = {
-    "plotting_style": "nature.mplstyle",
+    "plotting_style": "plot_styles/nature.mplstyle",
     "predict_counts": None,
     "power_spectrum": {'show_density': False, 'MAS': None},
     "bi_spectrum": {'show_density': False, 'k1': 0.5, 'k2': 0.6, 'Ntheta': 25, 'MAS': None},

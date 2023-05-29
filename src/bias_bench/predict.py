@@ -1,5 +1,3 @@
-import numpy as np
-
 from bias_bench.data_io import BiasModelData
 from bias_bench.Params import BiasParams
 from bias_bench.benchmark_models.TruncatedPowerLaw import TruncatedPowerLaw

@@ -17,7 +17,7 @@ classifiers = [
     'Programming Language :: Python :: 3',
 ]
 keywords = ['galaxy bias', 'testbench', 'simulations', 'python']
-requires-python = ">=3.7, <3.11"
+requires-python = ">=3.7, <=3.11"
 dependencies = [
     "h5py",
     "numpy == 1.23.3",

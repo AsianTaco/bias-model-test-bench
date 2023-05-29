@@ -10,7 +10,7 @@ def bias_bench_print(txt, verbose=False):
 
 
 def add_count_fields_to_hdf5(file_path: str, group_name: str, count_fields: np.ndarray, mass_bins,
-                             is_ground_truth: bool):
+                             is_ground_truth: bool, all_mass_bin: bool):
     if is_ground_truth:
         data_set_base_name = f'{group_name}/{counts_field_truth_base_name}'
     else:
@@ -22,6 +22,12 @@ def add_count_fields_to_hdf5(file_path: str, group_name: str, count_fields: np.n
 
             dset.attrs.create(mass_bin_left_attr, mass_bins[i])
             dset.attrs.create(mass_bin_right_attr, mass_bins[i + 1])
+
+        if all_mass_bin:
+            dset = f.create_dataset(f"{data_set_base_name}_{len(mass_bins) - 1}", data=count_fields[-1])
+
+            dset.attrs.create(mass_bin_left_attr, mass_bins[0])
+            dset.attrs.create(mass_bin_right_attr, np.inf)
 
 
 def add_overdensity_field_to_hdf5(file_path: str, group_name: str, dm_overdensity_fields: np.array):
