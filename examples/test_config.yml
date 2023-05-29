@@ -1,0 +1,34 @@
+num_bias_models: 1
+
+bias_model_1:
+  hdf5_file_path: /data73/hoellinger/bias_challenge/Training/data_and_predictions_BrokenPowerLaw_v0.1.hdf5
+  simulation_group_name: aquila_bias_challenge_training
+  n_simulations: 2
+  n_res: 2
+  n_mass_bins: 2
+
+  predict_counts_model: 
+  name: 'truncated power law'
+
+plots:
+  - power_spectrum
+  - bi_spectrum
+  - ngal_vs_rho
+  - density_images
+
+out_dir: ./test
+
+one_point:
+  x_lim: [0, 1.5]
+  y_lim: [-0.5, 3]
+ 
+power_spectrum:
+  show_density: false
+  MAS:
+
+bi_spectrum:
+  show_density: false
+  k1: 0.05
+  k2: 0.1
+  Ntheta: 25
+  MAS:

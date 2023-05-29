@@ -63,7 +63,7 @@ def plot_power_spectrum(bias_model_list: Sequence[BiasModelData], params, dir_pa
 
                     try:
                         count_field_benchmark = bias_model_data.counts_field_benchmark[sim_i][res_i][mass_bin_i]
-                        count_overdensity_benchmark = count_field_benchmark / np.mean(count_field_benchmark) - 1
+                        count_overdensity_benchmark = count_field_benchmark / count_field_benchmark.mean() - 1
                         k_benchmark, power_benchmark = compute_power_spectrum(count_overdensity_benchmark, l_box,
                                                                               MAS=MAS)
                         ax.loglog(k_benchmark, power_benchmark, label=benchmark_model_name)
