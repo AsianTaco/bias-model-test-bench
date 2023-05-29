@@ -1,9 +1,12 @@
 from abc import ABC, abstractmethod
 
+from bias_bench.likelihoods.DataLikelihood import DataLikelihood
+
 
 class BenchmarkModel(ABC):
-    def __init__(self, name):
+    def __init__(self, name, loss: DataLikelihood):
         self.name = name
+        self.loss = loss
 
     @abstractmethod
     def fit(self, input_xs, output_truths):

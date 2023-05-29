@@ -8,6 +8,7 @@ bias_model_1:
   n_mass_bins: 4
 
   predict_counts_model: truncated_power_law
+  predict_counts_loss: poisson
   name: 'Example'
 
 plots:

@@ -1,7 +1,10 @@
 from bias_bench.data_io import BiasModelData
 from bias_bench.Params import BiasParams
-from bias_bench.benchmark_models.TruncatedPowerLaw import TruncatedPowerLaw
+from bias_bench.benchmark_models.selector import select_bias_model
+from bias_bench.likelihoods.selector import select_likelihood
 from bias_bench.utils import bias_bench_print
+
+import numpy as np
 
 
 def predict_galaxy_counts(bias_model_data: BiasModelData, bias_params: BiasParams,
@@ -10,9 +13,11 @@ def predict_galaxy_counts(bias_model_data: BiasModelData, bias_params: BiasParam
 
     params = bias_params.data
 
-    _allowed_benchmark_models = ['truncated_power_law']
     benchmark_model_name = params[f'bias_model_{which_model}']['predict_counts_model']
-    assert benchmark_model_name in _allowed_benchmark_models
+    benchmark_model_loss = params[f'bias_model_{which_model}']['predict_counts_loss']
+    # TODO: Read in which bias model and which loss to use
+    loss = select_likelihood(benchmark_model_loss, params=None)
+    benchmark_model = select_bias_model(benchmark_model_name, loss)
 
     counts_field_benchmark = [
         [
@@ -23,9 +28,6 @@ def predict_galaxy_counts(bias_model_data: BiasModelData, bias_params: BiasParam
     ]
 
     n_benchmark_fits = 0
-
-    # TODO: make this more flexible
-    benchmark_model = TruncatedPowerLaw()
 
     for res_i in range(bias_model_data.n_res):
         for mass_bin_i in range(bias_model_data.n_mass_bins):

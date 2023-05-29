@@ -2,17 +2,21 @@ from abc import ABC, abstractmethod
 
 
 class DataLikelihood(ABC):
-    def __init__(self, name, data, params):
+    def __init__(self, name, params):
         self.name = name
-        self.data = data
+        self.params = params
 
     @abstractmethod
-    def negLogLike(self, prediction):
+    def negLogLike(self, data, prediction):
         """
         Parameters
         ----------
-        input_xs : ndarray
-            The predicted data produced from the bias model
+        data : ndarray
+            Underlying data given by observations/mocks.
+
+        prediction : ndarray
+            The predicted data produced from the bias model.
+
 
         Returns
         -------
