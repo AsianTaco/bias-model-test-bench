@@ -9,7 +9,8 @@ bias_model_1:
 
   predict_counts_model: truncated_power_law
   predict_counts_loss: poisson
-  name: 'Example'
+  predict_init_params: [1, 1, 1, 0.5]
+  name: 'example'
 
 plots:
   - power_spectrum
@@ -17,7 +18,7 @@ plots:
   - ngal_vs_rho
   - density_images
 
-out_dir: ./example
+out_dir: ./examples
 
 one_point:
   x_lim: [0, 1.5]

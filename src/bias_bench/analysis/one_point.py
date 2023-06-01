@@ -124,4 +124,4 @@ def plot_one_point_stats(bias_model_list: Sequence[BiasModelData], params, dir_p
                     f'{bias_model_name} for \n'
                     f'voxel size {resolution:.2f}$h^{{-1}}\\mathrm{{Mpc}}^3$ and mass bins {mass_lo_hi}')
                 fig.tight_layout(rect=[0, 0.03, 1, 0.95])
-                fig.savefig(f"{dir_path}/one_point_{bias_model_name}_res_{res_i}_mass_{mass_bin_i}.png")
+                fig.savefig(f"{dir_path}/{bias_model_name}_res_{res_i}_mass_{mass_bin_i}.png")

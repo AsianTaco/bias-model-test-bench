@@ -1,7 +1,4 @@
 import numpy as np
-from scipy.optimize import minimize
-
-from bias_bench.utils import bias_bench_print
 from bias_bench.benchmark_models.BenchmarkModel import BenchmarkModel
 
 
@@ -46,46 +43,11 @@ def _get_mean_ngal(rho, nmean, beta, epsilon_g, rho_g):
 
 class TruncatedPowerLaw(BenchmarkModel):
 
-    def __init__(self, loss):
-        super().__init__("Truncated Power Law", loss)
+    def __init__(self):
+        super().__init__("Truncated Power Law", 4)
+        self.bounds = [(1., 1e8), (1e-6, 6.), (1e-6, 3.), (1e-6, 1e5)]
 
-    def _callback(self, parameters):
-        """
-        Callback function to print the current parameters
-        """
-        # err = self.loss(parameters)
-        # print("Loss: {}".format(err))
-        print("Parameters: {}".format(parameters))
-
-    def fit(self, delta, count_field):
-        # TODO: extract this to separate module
-
-        try:
-            res = minimize(lambda x: self.compute_loss(delta, count_field, x), np.array([1., 1, 1, 0.5]),
-                            method="L-BFGS-B", callback=self._callback,
-                            tol=1e-10,
-                            # bounds=bounds[bias_model], TODO: include bounds
-                            options={'disp': True, 'eps': 1e-5, 'finite_diff_rel_step': 1e-5})
-            popt = res.x
-            # popt, pcov = scipy.optimize.curve_fit(_get_mean_ngal, delta, count_field, p0=, maxfev=4000)
-            bias_bench_print(f"Power law bias fit params: {popt}")
-            return popt
-        except RuntimeError:
-            return None
-
-    def compute_loss(self, delta, count_field, params):
-        delta = delta.flatten()
-        count_field = count_field.flatten()
-
-        prediction = _get_mean_ngal(delta, *params)
-        return self.loss.negLogLike(count_field, prediction)
-
-    def predict_poisson_intensity(self, delta, popt):
+    def predict(self, delta, popt):
         # Predict expected value ngal from delta_dm (and model params popt).
         ngal = _get_mean_ngal(delta.flatten(), *popt)
         return ngal.reshape(delta.shape)
-
-    def predict(self, delta, popt):
-        # Poisson sample ngal from delta_dm around ngal mean (and model params popt).
-        ngal_mean = self.predict_poisson_intensity(delta, popt)
-        return np.random.poisson(ngal_mean)

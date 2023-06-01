@@ -4,9 +4,12 @@ import numpy as np
 
 class Poisson(DataLikelihood):
 
-    def __init__(self, params):
-        super().__init__("Poisson", None)
+    def __init__(self):
+        super().__init__("Poisson", 0)
 
-    def negLogLike(self, data, prediction):
-        # TODO: Deal with negative or zero count predictions
-        return np.sum(prediction) - np.sum(data * np.log(prediction))
+    def negLogLike(self, data, prediction, params):
+        zero_offset = 1e-6
+        return np.sum(prediction + zero_offset) - np.sum(data * np.log(prediction + zero_offset))
+
+    def sample(self, prediction, params):
+        return np.random.poisson(prediction)

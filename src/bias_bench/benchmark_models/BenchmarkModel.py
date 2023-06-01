@@ -1,28 +1,12 @@
 from abc import ABC, abstractmethod
 
-from bias_bench.likelihoods.DataLikelihood import DataLikelihood
-
 
 class BenchmarkModel(ABC):
-    def __init__(self, name, loss: DataLikelihood):
+    bounds = None
+
+    def __init__(self, name, n_params):
         self.name = name
-        self.loss = loss
-
-    @abstractmethod
-    def fit(self, input_xs, output_truths):
-        """
-        Parameters
-        ----------
-        input_xs : ndarray
-            Input fields to train on with shape (batch_size, N, N, N)
-        output_truths : ndarray
-            Underlying ground truth fields to the input fields with shape (batch_size, N, N, N)
-
-        Returns
-        -------
-        ndarray
-            Optimized parameters for the model
-        """
+        self.n_params = n_params
 
     pass
 
