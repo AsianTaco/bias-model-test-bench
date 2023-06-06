@@ -23,7 +23,7 @@ class BFGSScipy(BaseOptimizer):
         print("Parameters: {}".format(params))
 
     def optimize(self, delta, data, init_params):
-        model_bounds = self.model.bounds
+        model_bounds = self.like.bounds + self.model.bounds
         res = minimize(lambda x: self.loss(delta, data, x), init_params,
                        method="L-BFGS-B", callback=lambda x: self.print_opt_stats(delta, data, x),
                        tol=1e-10,
