@@ -66,7 +66,6 @@ def predict_galaxy_counts(bias_model_data: BiasModelData, bias_params: BiasParam
                 for i, prediction in enumerate(sampled_count_fields):
                     counts_field_benchmark[i][res_i][mass_bin_i] = prediction
 
-    bias_model_data.counts_field_benchmark = counts_field_benchmark
-
     print(f'Successfully completed {n_benchmark_fits} benchmark model fits.')
+    return counts_field_benchmark
     # TODO: Add option to save predicted benchmark models to the corresponding hdf5 file

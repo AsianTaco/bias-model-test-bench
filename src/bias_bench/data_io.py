@@ -48,6 +48,7 @@ class BiasModelData:
 
         # Load the data.
         # TODO: Add option to not load anything from data
+        # TODO: Add option to load a specific range of res, mass, bins, simulations
         self.bias_model_params = self.params[f'bias_model_{self.which_model}']
         self.n_simulations = self.bias_model_params['n_simulations']
         self.n_res = self.bias_model_params['n_res']
@@ -77,7 +78,8 @@ class BiasModelData:
                     # Extract overdensity field with different resolutions
                     res_group_name = f'{sim_group_name}_{sim_i}/{res_base_name}_{res_i}'
                     overdensity = f[f'{res_group_name}/{dm_overdensity_name}'][...]
-                    bias_bench_print(f'Loaded overdensity field from {sim_group_name}_{sim_i} with shape={overdensity.shape}')
+                    bias_bench_print(
+                        f'Loaded overdensity field from {sim_group_name}_{sim_i} with shape={overdensity.shape}')
                     overdensity_fields_per_resolution.append(overdensity)
                     n_overdensity_fields += 1
 
