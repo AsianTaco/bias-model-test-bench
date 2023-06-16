@@ -1,3 +1,4 @@
+from pathlib import Path
 import numpy as np
 import h5py
 
@@ -45,3 +46,9 @@ def create_hdf5_data_file(file_path: str, parent_group_name: str, n_sims, n_res,
                 f.create_group(res_group_name)
                 f[res_group_name].attrs.create(box_size_attr, boxsize)
                 f[res_group_name].attrs.create(n_grid_attr, ngrid)
+
+
+def setup_plotting_folders(folder_path, n_simulations):
+    Path(folder_path).mkdir(parents=True, exist_ok=True)
+    for sim_i in range(n_simulations):
+        Path(f"{folder_path}/sim_{sim_i}").mkdir(parents=True, exist_ok=True)

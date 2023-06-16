@@ -26,9 +26,7 @@ def plot_bias_model_metrics(bias_model_data: Sequence[BiasModelData], bias_param
 
     # FIXME: make other plotting routines work again
     if 'power_spectrum' in params['plots']:
-        dir_path = f"{parent_folder_path}/two_point"
-        Path(dir_path).mkdir(parents=True, exist_ok=True)
-        plot_power_spectrum(bias_model_data, params, dir_path)
+        plot_power_spectrum(bias_model_data, params, parent_folder_path)
     if 'bi_spectrum' in params['plots']:
         dir_path = f"{parent_folder_path}/three_point"
         Path(dir_path).mkdir(parents=True, exist_ok=True)
