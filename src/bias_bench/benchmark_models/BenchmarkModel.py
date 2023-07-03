@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 
 
 class BenchmarkModel(ABC):
-    bounds = None
+    bounds = []
 
     def __init__(self, name, n_params):
         self.name = name

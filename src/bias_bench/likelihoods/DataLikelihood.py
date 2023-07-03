@@ -2,7 +2,8 @@ from abc import ABC, abstractmethod
 
 
 class DataLikelihood(ABC):
-    bounds = None
+    bounds = []
+
     def __init__(self, name, n_params):
         self.name = name
         self.n_params = n_params
