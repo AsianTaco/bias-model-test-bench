@@ -12,12 +12,24 @@ from bias_bench.utils import setup_plotting_folders
 
 
 def compute_power_spectrum(field, l_box, MAS):
-    # FIXME: Enable use of double precision
     overdensity = np.array(field, dtype=np.float32)
 
     pk = PKL.Pk(overdensity, l_box, axis=0, MAS=MAS)
 
     return pk.k3D, pk.Pk[:, 0]
+
+
+def compute_cross_correlation_coefficient(pred, truth, lbox, MAS):
+    pk = PKL.XPk([np.array(pred, dtype=np.float32), np.array(truth, dtype=np.float32)], lbox, axis=0, MAS=MAS)
+
+    pk_pred = pk.Pk[:, 0, 0]
+    pk_truth = pk.Pk[:, 0, 1]
+
+    xpk = pk.XPk[:, 0, 0]
+
+    r_c = xpk / np.sqrt(pk_pred * pk_truth)
+
+    return pk.k3D, r_c
 
 
 line_styles = ['-', '--', ':', '-.']
@@ -46,6 +58,7 @@ def plot_power_spectrum(bias_model_list: Sequence[BiasModelData], params, parent
 
                 for mass_bin_i in range(bias_model_data.n_mass_bins):
                     fig, ax = plt.subplots()
+                    fig_cross, ax_cross = plt.subplots()
                     fig_ratio, ax_ratio = plt.subplots()
 
                     legend_elements = []
@@ -86,19 +99,41 @@ def plot_power_spectrum(bias_model_list: Sequence[BiasModelData], params, parent
                         std_power = power.std(axis=0)
 
                         ax.loglog(k_counts, mean_power, c='r', lw=1, linestyle=line_styles[1])
-                        ax.fill_between(k_counts, (mean_power - std_power), (mean_power + std_power), alpha=0.2,
-                                        color='r')
+                        # ax.fill_between(k_counts, (mean_power - std_power), (mean_power + std_power), alpha=0.2,
+                        #                 color='r')
 
                         legend_elements.append(Line2D([0], [0], color='r', lw=1, linestyle=line_styles[1],
                                                       label=f'prediction (mean)'))
                         prediction_field_exists = True
 
                         if ground_truth_field_exists:
-                            ax_ratio.semilogx(k_truth, mean_power / power_truth - 1, c='r', lw=1,
+                            ax_ratio.semilogx(k_truth, (mean_power / power_truth) - 1, c='r', lw=1,
                                               linestyle=line_styles[0])
+                            for sample_i in range(count_field.shape[0]):
+                                ax_ratio.semilogx(k_truth, (power[sample_i] / power_truth) - 1, c='grey', lw=1,
+                                                  linestyle='-', alpha=0.2)
+                            # ax.fill_between(k_counts, - std_power/ mean_power,
+                            #                 std_power/ mean_power, alpha=0.2,
+                            #                 color='r')
                             legend_elements_ratio.append(
                                 Line2D([0], [0], color='r', lw=1, linestyle=line_styles[0],
                                        label=f'prediction'))
+
+                            cross_power = []
+                            for sample_i in range(count_field.shape[0]):
+                                sample = count_field[sample_i]
+                                count_overdensity = sample / np.mean(sample) - 1
+                                k_counts, power_counts = compute_cross_correlation_coefficient(count_overdensity,
+                                                                                               count_overdensity_truth, box,
+                                                                                               MAS=['None', 'None'])
+                                ax_cross.semilogx(k_counts, power_counts, c='grey', lw=1, linestyle='-', alpha=0.2)
+                                cross_power.append(power_counts)
+
+                            cross_power = np.array(cross_power)
+                            mean_cross_power = cross_power.mean(axis=0)
+
+                            ax_cross.semilogx(k_counts, mean_cross_power, c='r', lw=1, linestyle=line_styles[1])
+
                     except IndexError:
                         print("No predicted count field found in BiasModelData. Skipping plots")
 
@@ -119,32 +154,49 @@ def plot_power_spectrum(bias_model_list: Sequence[BiasModelData], params, parent
                     except (IndexError, AttributeError, TypeError):
                         print("No benchmark count field found in BiasModelData. Skipping plots")
 
-                    if prediction_field_exists:
-                        legend_elements.append(Patch(color='r', label='prediction (std)', alpha=0.2))
+                    # if prediction_field_exists:
+                    #     legend_elements.append(Patch(color='r', label='prediction (std)', alpha=0.2))
+
+                    # if prediction_field_exists:
+                    #     legend_elements_ratio.append(Patch(color='r', label='prediction (std)', alpha=0.2))
 
                     ax.legend(handles=legend_elements, fancybox=True, shadow=True)
                     ax.set_xlabel(r"$k$ [$h \ \mathrm{Mpc}^{-1}$]")
                     ax.set_ylabel(r"$P(k)$ [$h^{-3}\mathrm{Mpc}^3$]")
-                    ax.set_xlim(k_min, nyquist_freq)
+                    ax.set_xlim(2e-2, nyquist_freq)
+                    ax.set_ylim(bottom=5e2)
 
                     # FIXME: remove the hard-coded mass_bin key string
                     mass_lo_hi = [f'{n:.2e}' for n in field_attrs[f'mass_bin_{mass_bin_i}']]
-                    fig.suptitle(f'Power spectrum comparison at ${resolution}$ Mpc/h voxel resolution\n'
-                                 f'for halo masses between ${mass_lo_hi[0]} M_\\odot$ and ${mass_lo_hi[1]} M_\\odot$')
+                    fig.suptitle(f'Power spectrum comparison'
+                                 f' (${mass_lo_hi[0]} M_\\odot < M_h <{mass_lo_hi[1]} M_\\odot$)')
                     fig.tight_layout(rect=[0, 0.03, 1, 0.95])
                     fig.savefig(f"{dir_path}/sim_{sim_i}/res_{res_i}_mass_{mass_bin_i}.png")
 
+                    ax_cross.legend(handles=legend_elements, fancybox=True, shadow=True)
+                    ax_cross.set_xlabel(r"$k$ [$h \ \mathrm{Mpc}^{-1}$]")
+                    ax_cross.set_ylabel(r"$P(k)$ [$h^{-3}\mathrm{Mpc}^3$]")
+                    ax_cross.set_xlim(2e-2, nyquist_freq)
+                    ax_cross.set_ylim(bottom=.5)
+
+                    # FIXME: remove the hard-coded mass_bin key string
+                    mass_lo_hi = [f'{n:.2e}' for n in field_attrs[f'mass_bin_{mass_bin_i}']]
+                    fig_cross.suptitle(f'Cross correlation'
+                                       f' (${mass_lo_hi[0]} M_\\odot < M_h <{mass_lo_hi[1]} M_\\odot$)')
+                    fig_cross.tight_layout(rect=[0, 0.03, 1, 0.95])
+                    fig_cross.savefig(f"{dir_path}/sim_{sim_i}/cross_res_{res_i}_mass_{mass_bin_i}.png")
+
                     if ground_truth_field_exists:
                         ax_ratio.axhline(0, linewidth=.5, linestyle='--', color='black')
-                        ax_ratio.axhline(-0.05, lw=.5, color='grey', alpha=.5)
-                        ax_ratio.axhline(0.05, lw=.5, color='grey', alpha=.5)
+                        # ax_ratio.axhline(-0.05, lw=.5, color='grey', alpha=.5)
+                        # ax_ratio.axhline(0.05, lw=.5, color='grey', alpha=.5)
                         ax_ratio.set_xlabel(r"$k$ [$h \ \mathrm{Mpc}^{-1}$]")
                         ax_ratio.set_ylabel(r"$P(k) / P_{truth}(k) - 1$ ")
-                        ax_ratio.set_ylim(-0.5, 0.5)
-                        ax_ratio.set_xlim(k_min, nyquist_freq)
+                        ax_ratio.set_ylim(-0.4, 0.4)
+                        ax_ratio.set_xlim(2e-2, nyquist_freq)
                         ax_ratio.legend(handles=legend_elements_ratio, fancybox=True, shadow=True)
-                        fig_ratio.suptitle(f'Power spectrum ratios at ${resolution}$ Mpc/h \n'
-                                           f'for halo masses between ${mass_lo_hi[0]} M_\\odot$ and ${mass_lo_hi[1]} M_\\odot$')
+                        fig_ratio.suptitle(f'Power spectrum ratios'
+                                           f' (${mass_lo_hi[0]} M_\\odot < M_h <{mass_lo_hi[1]} M_\\odot$)')
                         fig_ratio.tight_layout(rect=[0, 0.03, 1, 0.95])
                         fig_ratio.savefig(f"{dir_path}/sim_{sim_i}/ratios_res_{res_i}_mass_{mass_bin_i}.png")
 
