@@ -13,9 +13,9 @@ class NegativeBinomial(DataLikelihood):
         zero_offset = 1e-6
 
         r = params[0]
-        return np.sum(-data * np.log(prediction + zero_offset) + data * np.log(r + prediction)) + np.sum(
-            r * np.log(1 + prediction / r))
+        return np.sum(
+            -data * np.log(prediction + zero_offset) + data * np.log(r + prediction) + r * np.log(1 + prediction / r))
 
     def sample(self, prediction, params):
         r = params[0]
-        return nbinom.rvs(r, 1 / (prediction / r + 1)).reshape(prediction.shape)
+        return nbinom.rvs(r, r / (prediction + r)).reshape(prediction.shape)
