@@ -7,8 +7,7 @@ class LogSkewNormal(DataLikelihood):
 
     def __init__(self):
         super().__init__("LogSkewNormal", 2)
-        self.bounds = [(1, 1e8)]
-        self.bounds = [(-1e4, 1e4)]
+        self.bounds = [(1, 1e8), (-1e4,1e4)]
 
     def negLogLike(self, data, prediction, params):
 
@@ -28,4 +27,4 @@ class LogSkewNormal(DataLikelihood):
     def sample(self, prediction, params):
         sigma = params[0].clip(min=0.001)
         alpha = params[1]
-        return np.exp(skewnorm.rvs(alpha, loc = prediction, scale = sigma))
+        return np.exp(skewnorm.rvs(alpha, loc = prediction, scale = sigma)).reshape(prediction.shape)

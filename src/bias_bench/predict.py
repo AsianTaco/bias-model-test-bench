@@ -17,12 +17,12 @@ def predict_galaxy_counts(bias_model_data: BiasModelData, bias_params: BiasParam
 
     benchmark_model_name = params[f'bias_model_{which_model}']['predict_counts_model']
     benchmark_model_loss = params[f'bias_model_{which_model}']['predict_counts_loss']
+    benchmark_optimizer = params[f'bias_model_{which_model}']['benchmark_optimizer']
     init_params = np.array(params[f'bias_model_{which_model}']['predict_init_params'])
 
     likelihood = select_likelihood(benchmark_model_loss)
     benchmark_model = select_bias_model(benchmark_model_name)
-    # TODO: Generalize this to different optimizers via a selector function
-    optimizer = select_optimizer('emcee', likelihood, benchmark_model)
+    optimizer = select_optimizer(benchmark_optimizer, likelihood, benchmark_model)
 
     counts_field_benchmark = [
         [
@@ -62,9 +62,11 @@ def predict_galaxy_counts(bias_model_data: BiasModelData, bias_params: BiasParam
             else:
                 predicted_count_fields = benchmark_model.predict(overdensities, fitted_benchmark_model_params)
                 sampled_count_fields = likelihood.sample(predicted_count_fields, fitted_lh_params)
+                print(np.shape(sampled_count_fields))
                 n_benchmark_fits += 1
 
                 for i, prediction in enumerate(sampled_count_fields):
+                    print(np.shape(counts_field_benchmark)) #(1,1,2)
                     counts_field_benchmark[i][res_i][mass_bin_i] = prediction
 
     print(f'Successfully completed {n_benchmark_fits} benchmark model fits.')
