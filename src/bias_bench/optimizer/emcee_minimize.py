@@ -11,8 +11,8 @@ class EMCEESampler(BaseOptimizer):
 
         # TODO: make this adjustable
         self.nwalkers = 50
-        self.nsteps = 1000
-        self.ndiscard = 200
+        self.nsteps = 2500
+        self.ndiscard = 500
 
     def loss(self, params, delta, data):
         likelihood_params = params[:self.like.n_params]
