@@ -14,15 +14,15 @@ bias_model_1:
 
 plots:
   - power_spectrum
-  - bi_spectrum
   - ngal_vs_rho
-  - density_images
+#  - bi_spectrum
+#  - density_images
 
 out_dir: ./examples/emcee
 
 one_point:
-  x_lim: [0, 1.5]
-  y_lim: [-0.5, 3]
+  x_lim: [0, 1]
+  y_lim: [-0.5, 1]
  
 power_spectrum:
   show_density: false

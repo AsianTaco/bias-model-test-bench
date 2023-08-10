@@ -4,10 +4,9 @@ import Pk_library as PKL
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
-from matplotlib.patches import Patch
 
-from bias_bench.data_io import BiasModelData
 from bias_bench.constants import *
+from bias_bench.data_io import BiasModelData
 from bias_bench.utils import setup_plotting_folders
 
 
