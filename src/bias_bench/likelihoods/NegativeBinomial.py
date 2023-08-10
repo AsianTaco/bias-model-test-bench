@@ -13,7 +13,7 @@ class NegativeBinomial(DataLikelihood):
         zero_offset = 1e-6
 
         r = params[0]
-        return np.sum(
+        return - np.sum(
             -data * np.log(prediction + zero_offset) + data * np.log(r + prediction) + r * np.log(1 + prediction / r))
 
     def sample(self, prediction, params):
