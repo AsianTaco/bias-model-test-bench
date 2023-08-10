@@ -11,7 +11,7 @@ class EMCEESampler(BaseOptimizer):
 
         # TODO: make this adjustable
         self.nwalkers = 50
-        self.nsteps = 1000
+        self.nsteps = 2500
         self.ndiscard = 500
 
     def loss(self, params, delta, data):
