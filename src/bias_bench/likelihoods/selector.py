@@ -8,5 +8,7 @@ def select_likelihood(likelihood_name):
             return Poisson()
         case 'nb':
             return NegativeBinomial()
+        case 'gaussian':
+            return Gaussian()
         case _:
             raise NotImplementedError(f"{likelihood_name} not part of implemented likelihoods.")

@@ -1,14 +1,16 @@
 num_bias_models: 1
 
 bias_model_1:
-  hdf5_file_path: bias_challenge/data/data.hdf5
-  simulation_group_name: aquila_bias_challenge_training
+  #hdf5_file_path: mock_data/data.hdf5
+  #simulation_group_name: aquila_bias_challenge_training
+  hdf5_file_path: continuous_quijote_data.h5
+  simulation_group_name: quijote_continuous
   n_simulations: 1
   n_res: 1
-  n_mass_bins: 2
+  n_mass_bins: 1
 
-  predict_counts_model: truncated_power_law
-  predict_counts_loss: poisson
+  predict_counts_model: linear
+  predict_counts_loss: gaussian
   predict_init_params: [1, 1, 0.5, 1]
   name: 'example'
 
@@ -23,7 +25,7 @@ out_dir: ./examples
 one_point:
   x_lim: [0, 1.5]
   y_lim: [-0.5, 3]
- 
+
 power_spectrum:
   show_density: false
   MAS:
