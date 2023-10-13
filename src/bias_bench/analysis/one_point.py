@@ -46,7 +46,8 @@ def plot_one_point_stats(bias_model_list: Sequence[BiasModelData], params, paren
                     )
 
                     try:
-                        count_field = bias_model_data.count_fields_predicted[sim_i][res_i][mass_bin_i]
+                        # TODO: Think about how to visualize for multiple realisations
+                        count_field = bias_model_data.count_fields_predicted[sim_i][res_i][mass_bin_i][0]
                         log_counts_overdensity = np.log10(count_field / (count_field.mean() + 1e-6) + 1)
                         axs[0].scatter(log_dm_overdensity_flat, log_counts_overdensity.flatten(),
                                        c='tab:blue',
