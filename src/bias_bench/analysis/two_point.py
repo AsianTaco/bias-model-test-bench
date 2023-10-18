@@ -331,7 +331,7 @@ def plot_power_spectrum(bias_model_list: Sequence[BiasModelData], params, parent
 
                     finalise_figure(bi_spec_fig, bi_spec_ax,
                                     r"Angle $\theta$",
-                                    r"$B_{k_1, k_2}(\theta)$ [$h^{-3}\mathrm{Mpc}^3$]",
+                                    r"$B_{k_1, k_2}(\theta)$ [$h^{-6}\mathrm{Mpc}^6$]",
                                     legend_elements_bi_spec, (None, None), (None, None), mass_lo_hi)
 
                     scale_info_text = bi_spec_ax.text(0.05, 0.1, '', transform=bi_spec_ax.transAxes)
