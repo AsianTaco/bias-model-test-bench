@@ -59,8 +59,8 @@ ground_truth_legend = Line2D([0], [0], color=ratio_colors[0], ls=line_styles[0],
 prediction_mean_legend = Line2D([0], [0], color=ratio_colors[1], ls=line_styles[1], label=f'prediction (mean)')
 
 
-def add_plots_with_std(ax, x, mean, std):
-    ax.loglog(x, mean, c='r', lw=1, linestyle=line_styles[1])
+def add_plots_with_std(ax, x, mean, std, ls=line_styles[1]):
+    ax.loglog(x, mean, c='r', lw=1, linestyle=ls)
     ax.fill_between(x, (mean - std), (mean + std), alpha=0.4, color='r')
     ax.fill_between(x, (mean - 2 * std), (mean + 2 * std), alpha=0.2, color='r')
 
@@ -171,8 +171,8 @@ def plot_power_spectrum(bias_model_list: Sequence[BiasModelData], params, parent
                             bi_spec.append(bi_spec_counts.bispectrum)
                             # power_spec_ax.loglog(power_spec_counts.k, power_spec_counts.power, c='grey',
                             #                      ls='-', alpha=0.4)
-                            bi_spec_ax.loglog(bi_spec_counts.theta, bi_spec_counts.bispectrum, c='grey',
-                                              ls='-', alpha=0.4)
+                            # bi_spec_ax.loglog(bi_spec_counts.theta, bi_spec_counts.bispectrum, c='grey',
+                            #                   ls='-', alpha=0.4)
 
                         power = np.array(power)
                         mean_power = power.mean(axis=0)
@@ -190,19 +190,19 @@ def plot_power_spectrum(bias_model_list: Sequence[BiasModelData], params, parent
 
                         if ground_truth_field_exists:
                             mean_ratio = (mean_power / power_spec_truth.power) - 1
-                            power_spec_ratio_ax.semilogx(power_spec_truth.k, mean_ratio, c='r', lw=1,
-                                                         linestyle=line_styles[0])
-                            power_ratio = []
+                            power_ratios = []
                             for sample_i in range(count_field.shape[0]):
                                 # power_spec_ratio_ax.semilogx(power_spec_truth.k,
                                 #                              (power[sample_i] / power_spec_truth.power) - 1, c='grey',
                                 #                              lw=1,
                                 #                              linestyle='-', alpha=0.2)
-                                power_ratio.append((power[sample_i] / power_spec_truth.power) - 1)
+                                power_ratios.append((power[sample_i] / power_spec_truth.power) - 1)
 
-                            power_ratio = np.array(power_ratio)
-                            std_power_ratio = power_ratio.std(axis=0)
+                            power_ratios = np.array(power_ratios)
+                            std_power_ratio = power_ratios.std(axis=0)
 
+                            power_spec_ratio_ax.semilogx(power_spec_truth.k, mean_ratio, c='r', lw=1,
+                                                         linestyle=line_styles[0])
                             power_spec_ratio_ax.fill_between(power_spec_truth.k, (mean_ratio - std_power_ratio),
                                                              (mean_ratio + std_power_ratio), alpha=0.4,
                                                              color='r')
@@ -235,16 +235,29 @@ def plot_power_spectrum(bias_model_list: Sequence[BiasModelData], params, parent
                                                           linestyle=line_styles[1])
 
                             # Bispectrum ratios
-                            bi_spec_ratio_ax.semilogx(bi_spec_truth.theta,
-                                                      (mean_bi_spec / bi_spec_truth.bispectrum) - 1,
-                                                      c='r', lw=1,
-                                                      linestyle=line_styles[0])
+                            mean_bispec_ratio = (mean_bi_spec / bi_spec_truth.bispectrum) - 1
+
+                            bi_spec_ratios = []
                             for sample_i in range(count_field.shape[0]):
-                                bi_spec_ratio_ax.semilogx(bi_spec_truth.theta,
-                                                          (bi_spec[sample_i] / bi_spec_truth.bispectrum) - 1,
-                                                          c='grey',
-                                                          lw=1,
-                                                          linestyle='-', alpha=0.2)
+                                bi_spec_ratios.append((bi_spec[sample_i] / bi_spec_truth.bispectrum) - 1)
+                                # bi_spec_ratio_ax.semilogx(bi_spec_truth.theta,
+                                #                           (bi_spec[sample_i] / bi_spec_truth.bispectrum) - 1,
+                                #                           c='grey',
+                                #                           lw=1,
+                                #                           linestyle='-', alpha=0.2)
+                            bi_spec_ratios = np.array(bi_spec_ratios)
+                            std_bi_spec_ratio = bi_spec_ratios.std(axis=0)
+
+                            bi_spec_ratio_ax.semilogx(bi_spec_truth.theta, mean_bispec_ratio, c='r', lw=1,
+                                                      linestyle=line_styles[0])
+                            bi_spec_ratio_ax.fill_between(bi_spec_truth.theta, (mean_bispec_ratio - std_bi_spec_ratio),
+                                                          (mean_bispec_ratio + std_bi_spec_ratio), alpha=0.4,
+                                                          color='r')
+                            bi_spec_ratio_ax.fill_between(bi_spec_truth.theta,
+                                                          (mean_bispec_ratio - 2 * std_bi_spec_ratio),
+                                                          (mean_bispec_ratio + 2 * std_bi_spec_ratio), alpha=0.2,
+                                                          color='r')
+
                             # power_spec_ax.fill_between(k_counts, - std_power/ mean_power,
                             #                 std_power/ mean_power, alpha=0.2,
                             #                 color='r')
@@ -316,13 +329,22 @@ def plot_power_spectrum(bias_model_list: Sequence[BiasModelData], params, parent
                     cross_correlation_fig.savefig(
                         f"{two_point_dir}/sim_{sim_i}/cross_res_{res_i}_mass_{mass_bin_i}.png")
 
-                    bi_spec_ax.legend(handles=legend_elements_bi_spec, fancybox=True, shadow=True)
-                    bi_spec_ax.set_xlabel(r"Angle $\theta$")
-                    power_spec_ax.set_ylabel(r"$B_{k_1, k_2}(\theta)$ [$h^{-3}\mathrm{Mpc}^3$]")
+                    finalise_figure(bi_spec_fig, bi_spec_ax,
+                                    r"Angle $\theta$",
+                                    r"$B_{k_1, k_2}(\theta)$ [$h^{-3}\mathrm{Mpc}^3$]",
+                                    legend_elements_bi_spec, (None, None), (None, None), mass_lo_hi)
 
-                    bi_spec_fig.suptitle(f'Bi-spectrum comparison for $k_1 = {k1}, k_2 = {k2}$\n'
-                                         f' (${mass_lo_hi[0]} M_\\odot < M_h <{mass_lo_hi[1]} M_\\odot$)')
-                    bi_spec_fig.tight_layout(rect=[0, 0.03, 1, 0.95])
+                    scale_info_text = bi_spec_ax.text(0.05, 0.1, '', transform=bi_spec_ax.transAxes)
+                    scale_info_text = bi_spec_ax.annotate(
+                        f"$k_1 = {k1}"+r"h \ \mathrm{Mpc}^{-1}$", xycoords=scale_info_text, xy=(0, -1.1),
+                        verticalalignment="bottom")
+                    bi_spec_ax.annotate(
+                        f"$k_2 = {k2}" + r"h \ \mathrm{Mpc}^{-1}$", xycoords=scale_info_text, xy=(0, -1.1),
+                        verticalalignment="bottom")
+
+                    # bi_spec_fig.suptitle(f'Bi-spectrum comparison for $k_1 = {k1}, k_2 = {k2}$\n'
+                    #                      f' (${mass_lo_hi[0]} M_\\odot < M_h <{mass_lo_hi[1]} M_\\odot$)')
+                    # bi_spec_fig.tight_layout(rect=[0, 0.03, 1, 0.95])
                     bi_spec_fig.savefig(f"{three_point_dir}/sim_{sim_i}/res_{res_i}_mass_{mass_bin_i}.png")
 
                     if ground_truth_field_exists:
@@ -339,13 +361,19 @@ def plot_power_spectrum(bias_model_list: Sequence[BiasModelData], params, parent
                             f"{two_point_dir}/sim_{sim_i}/ratios_res_{res_i}_mass_{mass_bin_i}.png")
 
                         bi_spec_ratio_ax.axhline(0, linewidth=.5, linestyle='--', color='black')
-                        bi_spec_ratio_ax.set_xlabel(r"Angle $\theta$")
-                        bi_spec_ratio_ax.set_ylabel(r"$B(k) / B_{truth}(k) - 1$")
-                        bi_spec_ratio_ax.set_ylim(-0.4, 0.4)
-                        bi_spec_ratio_ax.legend(handles=legend_elements_power_spec_ratio, fancybox=True, shadow=True)
-                        bi_spec_ratio_fig.suptitle(f'Bi-spectrum ratios'
-                                                   f' (${mass_lo_hi[0]} M_\\odot < M_h <{mass_lo_hi[1]} M_\\odot$)')
-                        bi_spec_ratio_fig.tight_layout(rect=[0, 0.03, 1, 0.95])
+                        scale_info_text = bi_spec_ratio_ax.text(0.05, 0.1, '', transform=bi_spec_ratio_ax.transAxes)
+                        scale_info_text = bi_spec_ratio_ax.annotate(
+                            f"$k_1 = {k1}" + r"h \ \mathrm{Mpc}^{-1}$", xycoords=scale_info_text, xy=(0, -1.1),
+                            verticalalignment="bottom")
+                        bi_spec_ratio_ax.annotate(
+                            f"$k_2 = {k2}" + r"h \ \mathrm{Mpc}^{-1}$", xycoords=scale_info_text, xy=(0, -1.1),
+                            verticalalignment="bottom")
+
+                        finalise_figure(bi_spec_ratio_fig, bi_spec_ratio_ax,
+                                        r"Angle $\theta$",
+                                        r"$B(k) / B_{truth}(k) - 1$",
+                                        legend_elements_ratio_bi_spec, (None, None), (-0.4, 0.4), mass_lo_hi)
+
                         bi_spec_ratio_fig.savefig(
                             f"{three_point_dir}/sim_{sim_i}/ratios_res_{res_i}_mass_{mass_bin_i}.png")
 
