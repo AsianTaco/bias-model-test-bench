@@ -23,7 +23,4 @@ def plot_bias_model_metrics(bias_model_data: Sequence[BiasModelData], bias_param
     if 'ngal_vs_rho' in params['plots']:
         plot_one_point_stats(bias_model_data, params, parent_folder_path)
     if 'power_bi_spectrum' in params['plots']:
-        plot_power_spectrum(bias_model_data, params, parent_folder_path)
-    # FIXME: make other plotting routines work again
-    # if 'bi_spectrum' in params['plots']:
-#        plot_bispectrum(bias_model_data, params, parent_folder_path)
+        plot_power_and_bi_spectrum(bias_model_data, params, parent_folder_path)

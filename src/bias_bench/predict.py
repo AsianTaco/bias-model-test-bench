@@ -66,7 +66,7 @@ def predict_galaxy_counts(bias_model_data: BiasModelData, bias_params: BiasParam
                 n_benchmark_fits += 1
 
                 for i, prediction in enumerate(sampled_count_fields):
-                    print(np.shape(counts_field_benchmark)) #(1,1,2)
+                    print(np.shape(counts_field_benchmark))
                     counts_field_benchmark[i][res_i][mass_bin_i] = prediction
 
     print(f'Successfully completed {n_benchmark_fits} benchmark model fits.')

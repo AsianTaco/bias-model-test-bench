@@ -84,7 +84,7 @@ def finalise_figure(fig, ax, xlabel, ylabel, legends, xlim, ylim, mass_bins):
     fig.suptitle('$' + m_lo_str + r"\leq M_{\mathrm{vir}} [M_\odot]" + m_hi_str + '$')
 
 
-def plot_power_spectrum(bias_model_list: Sequence[BiasModelData], params, parent_folder_path):
+def plot_power_and_bi_spectrum(bias_model_list: Sequence[BiasModelData], params, parent_folder_path):
     # power-spectrum parameters
     show_density = params['power_spectrum']['show_density']
     MAS = params['power_spectrum']['MAS']
