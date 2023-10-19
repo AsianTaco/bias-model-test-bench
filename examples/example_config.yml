@@ -1,25 +1,22 @@
 num_bias_models: 1
 
 bias_model_1:
-  #hdf5_file_path: mock_data/data.hdf5
-  #simulation_group_name: aquila_bias_challenge_training
-  hdf5_file_path: mock_data/continuous_quijote_data.h5
-  simulation_group_name: quijote_continuous
+  hdf5_file_path: bias_challenge/data/data.hdf5
+  simulation_group_name: aquila_bias_challenge_training
   n_simulations: 1
   n_res: 1
-  n_mass_bins: 2
+  n_mass_bins: 1
 
-  predict_counts_model: linear
-  predict_counts_loss: logskewnormal
-  benchmark_optimizer: emcee
-  predict_init_params: [1, 1.5, 10, 3]
+  predict_counts_model: truncated_power_law
+  predict_counts_loss: poisson
+  benchmark_optimizer: BFGS
+  predict_init_params: [1, 1.5, 1, 1]
   name: 'example'
 
 plots:
-  - power_spectrum
-  - bi_spectrum
   - ngal_vs_rho
-  - density_images
+  - power_bi_spectrum
+#  - density_images
 
 out_dir: ./example
 
