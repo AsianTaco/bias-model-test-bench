@@ -2,7 +2,6 @@ from bias_bench.data_io import BiasModelData
 from bias_bench.Params import BiasParams
 from bias_bench.benchmark_models.selector import select_bias_model
 from bias_bench.likelihoods.selector import select_likelihood
-from bias_bench.optimizer.scipy_minimize import BFGSScipy
 from bias_bench.optimizer.selector import select_optimizer
 from bias_bench.utils import bias_bench_print
 
@@ -18,11 +17,12 @@ def predict_galaxy_counts(bias_model_data: BiasModelData, bias_params: BiasParam
     benchmark_model_name = params[f'bias_model_{which_model}']['predict_counts_model']
     benchmark_model_loss = params[f'bias_model_{which_model}']['predict_counts_loss']
     benchmark_optimizer = params[f'bias_model_{which_model}']['benchmark_optimizer']
+    benchmark_optimizer_args = params[f'bias_model_{which_model}']['benchmark_optimizer_args']
     init_params = np.array(params[f'bias_model_{which_model}']['predict_init_params'])
 
     likelihood = select_likelihood(benchmark_model_loss)
     benchmark_model = select_bias_model(benchmark_model_name)
-    optimizer = select_optimizer(benchmark_optimizer, likelihood, benchmark_model)
+    optimizer = select_optimizer(benchmark_optimizer, likelihood, benchmark_model, benchmark_optimizer_args)
 
     counts_field_benchmark = [
         [

@@ -7,14 +7,16 @@ bias_model_1:
   n_res: 1
   n_mass_bins: 1
 
-  predict_counts_model: linear
+  predict_counts_model: truncated_power_law
+  predict_init_params: [100., 1., 0.01, 0.001]
   predict_counts_loss: poisson
-  predict_init_params: [1, 1]
+  benchmark_optimizer: emcee
+  benchmark_optimizer_args: [50, 20000, 5000]
   name: 'emcee'
 
 plots:
-  - power_spectrum
-  - ngal_vs_rho
+  - power_bi_spectrum
+#  - ngal_vs_rho
 #  - bi_spectrum
 #  - density_images
 

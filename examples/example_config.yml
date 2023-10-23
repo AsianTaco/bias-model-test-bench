@@ -8,9 +8,9 @@ bias_model_1:
   n_mass_bins: 1
 
   predict_counts_model: truncated_power_law
+  predict_init_params: [100., 1., 0.01, 0.001]
   predict_counts_loss: poisson
   benchmark_optimizer: BFGS
-  predict_init_params: [1, 1.5, 1, 1]
   name: 'example'
 
 plots:
@@ -18,7 +18,7 @@ plots:
   - power_bi_spectrum
 #  - density_images
 
-out_dir: ./example
+out_dir: ./examples
 
 one_point:
   x_lim: [0, 1.5]
