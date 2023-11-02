@@ -1,0 +1,21 @@
+# Custom plotting style for phd day
+
+# Set color cycle
+# Set line style as well for black and white graphs
+axes.prop_cycle : (cycler('color', ['k', 'r', 'b', 'g']) + cycler('ls', ['-', '--', ':', '-.']))
+
+# Set default figure size
+figure.figsize : 10, 4
+
+# Font settings
+font.size : 14
+font.family : Computer Modern Roman
+
+# Always save as 'tight'
+savefig.format: svg
+savefig.bbox : tight
+savefig.pad_inches : 0.02  # Use virtually all space when we specify figure dimensions
+
+# LaTeX packages
+text.usetex: True
+text.latex.preamble : \usepackage{amsmath} \usepackage{amssymb} \usepackage{sfmath}

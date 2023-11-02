@@ -132,3 +132,4 @@ dmypy.json
 # Auxiliary files
 
 *plots/
+*data/
