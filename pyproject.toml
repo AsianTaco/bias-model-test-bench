@@ -38,6 +38,7 @@ where = ['src']
 
 [project.optional-dependencies]
 test = ['pytest']
+notebook = ['jupyter']
 
 [project.scripts]
 galaxy-bias-benchmark = "bias_bench.console_scripts:run_test_bench"
