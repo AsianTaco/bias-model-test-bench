@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 
+from bias_bench.constants import capital_rockstar_columns
 
 def convert_dataframe_catalog_to_numpy(dataframe_cat):
     numpy_halo_cat = np.empty(dataframe_cat.index.size,
@@ -26,18 +27,14 @@ def extract_halo_cat_with_mass_threshold(halo_cat, mass_threshold, capital_id=Fa
     return reduced_cat
 
 
-def read_rockstar_ascii_cat(cat_paths, mass_threshold, capital_id=False, convert_to_numpy=False):
+def read_rockstar_ascii_cat(cat_paths, mass_threshold, capital_id=False, convert_to_numpy=False, infer_header=True):
     reduced_cats = []
 
     for cat_path in cat_paths:
-        halo_cat = pd.read_csv(cat_path, sep=' ', comment='#',
-                               names=['ID', 'DescID', 'Mvir', 'Vmax', 'Vrms', 'Rvir', 'Rs', 'Np', 'X', 'Y',
-                                      'Z', 'VX', 'VY', 'VZ', 'JX', 'JY', 'JZ', 'Spin', 'rs_klypin',
-                                      'Mvir_all', 'M200b', 'M200c', 'M500c', 'M2500c', 'Xoff', 'Voff',
-                                      'spin_bullock', 'b_to_a', 'c_to_a', 'A[x]', 'A[y]', 'A[z]',
-                                      'b_to_a(500c)', 'c_to_a(500c)', 'A[x](500c)', 'A[y](500c)',
-                                      'A[z](500c)', 'T/|U|', 'M_pe_Behroozi', 'M_pe_Diemer',
-                                      'Halfmass_Radius', 'PID'])
+        # TODO: bypass this way of hard coding the header columns as constants
+        header_names = capital_rockstar_columns
+        header_line = 0 if infer_header else None
+        halo_cat = pd.read_csv(cat_path, sep=' ', comment='#', names=header_names, header=header_line)
         reduced_cat = extract_halo_cat_with_mass_threshold(halo_cat, mass_threshold, capital_id, convert_to_numpy)
         reduced_cats.append(reduced_cat)
 
