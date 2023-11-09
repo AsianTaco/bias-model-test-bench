@@ -7,4 +7,5 @@ except ImportError:
 
 __version__ = metadata.version("bias_bench")
 
+from bias_bench.processing import *
 from bias_bench.utils import *

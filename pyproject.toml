@@ -22,6 +22,7 @@ dependencies = [
     "h5py",
     "numpy == 1.23.3",
     "matplotlib",
+    "pandas",
     "numba",
     "scipy",
     "pyaml",
@@ -41,3 +42,4 @@ test = ['pytest']
 [project.scripts]
 galaxy-bias-benchmark = "bias_bench.console_scripts:run_test_bench"
 optimise_borg_bias = "bias_bench.console_scripts:optimise_borg_bias"
+bundle_catalogs = "bias_bench.console_scripts:bundle_catalogs"

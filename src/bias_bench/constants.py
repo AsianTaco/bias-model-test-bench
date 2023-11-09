@@ -11,3 +11,9 @@ n_grid_attr = 'ngrid'
 mass_bin_left_attr = 'M_lo'
 mass_bin_right_attr = 'M_hi'
 
+# halo catalog keys
+
+x_key = 'x'
+y_key = 'y'
+z_key = 'z'
+mvir_key = 'mvir'
