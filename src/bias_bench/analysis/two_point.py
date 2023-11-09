@@ -1,9 +1,9 @@
-from typing import Sequence
 from collections import namedtuple
-import Pk_library as PKL
+from typing import Sequence
 
-import numpy as np
+import Pk_library as PKL
 import matplotlib.pyplot as plt
+import numpy as np
 from matplotlib.lines import Line2D
 
 from bias_bench.constants import *
@@ -315,7 +315,7 @@ def plot_power_and_bi_spectrum(bias_model_list: Sequence[BiasModelData], params,
                                     r"$P(k)$ [$h^{-3}\mathrm{Mpc}^3$]",
                                     legend_elements_power_spec, (2e-2, nyquist_freq), (1e3, None), mass_lo_hi)
 
-                    power_spec_fig.savefig(f"{two_point_dir}/sim_{sim_i}/res_{res_i}_mass_{mass_bin_i}.png")
+                    power_spec_fig.savefig(f"{two_point_dir}/sim_{sim_i}/res_{res_i}_mass_{mass_bin_i}")
 
                     cross_correlation_ax.legend(handles=legend_elements_power_spec, fancybox=True, shadow=True)
                     cross_correlation_ax.set_xlabel(r"$k$ [$h \ \mathrm{Mpc}^{-1}$]")
@@ -327,7 +327,7 @@ def plot_power_and_bi_spectrum(bias_model_list: Sequence[BiasModelData], params,
                                                    f' (${mass_lo_hi[0]} M_\\odot < M_h <{mass_lo_hi[1]} M_\\odot$)')
                     cross_correlation_fig.tight_layout(rect=[0, 0.03, 1, 0.95])
                     cross_correlation_fig.savefig(
-                        f"{two_point_dir}/sim_{sim_i}/cross_res_{res_i}_mass_{mass_bin_i}.png")
+                        f"{two_point_dir}/sim_{sim_i}/cross_res_{res_i}_mass_{mass_bin_i}")
 
                     finalise_figure(bi_spec_fig, bi_spec_ax,
                                     r"Angle $\theta$",
@@ -336,7 +336,7 @@ def plot_power_and_bi_spectrum(bias_model_list: Sequence[BiasModelData], params,
 
                     scale_info_text = bi_spec_ax.text(0.05, 0.1, '', transform=bi_spec_ax.transAxes)
                     scale_info_text = bi_spec_ax.annotate(
-                        f"$k_1 = {k1}"+r"h \ \mathrm{Mpc}^{-1}$", xycoords=scale_info_text, xy=(0, -1.1),
+                        f"$k_1 = {k1}" + r"h \ \mathrm{Mpc}^{-1}$", xycoords=scale_info_text, xy=(0, -1.1),
                         verticalalignment="bottom")
                     bi_spec_ax.annotate(
                         f"$k_2 = {k2}" + r"h \ \mathrm{Mpc}^{-1}$", xycoords=scale_info_text, xy=(0, -1.1),
@@ -345,7 +345,7 @@ def plot_power_and_bi_spectrum(bias_model_list: Sequence[BiasModelData], params,
                     # bi_spec_fig.suptitle(f'Bi-spectrum comparison for $k_1 = {k1}, k_2 = {k2}$\n'
                     #                      f' (${mass_lo_hi[0]} M_\\odot < M_h <{mass_lo_hi[1]} M_\\odot$)')
                     # bi_spec_fig.tight_layout(rect=[0, 0.03, 1, 0.95])
-                    bi_spec_fig.savefig(f"{three_point_dir}/sim_{sim_i}/res_{res_i}_mass_{mass_bin_i}.png")
+                    bi_spec_fig.savefig(f"{three_point_dir}/sim_{sim_i}/res_{res_i}_mass_{mass_bin_i}")
 
                     if ground_truth_field_exists:
                         power_spec_ratio_ax.axhline(0, linewidth=.5, linestyle='--', color='black')
@@ -358,7 +358,7 @@ def plot_power_and_bi_spectrum(bias_model_list: Sequence[BiasModelData], params,
                                         legend_elements_power_spec_ratio, (2e-2, nyquist_freq), (-0.2, 0.2), mass_lo_hi)
 
                         power_spec_ratio_fig.savefig(
-                            f"{two_point_dir}/sim_{sim_i}/ratios_res_{res_i}_mass_{mass_bin_i}.png")
+                            f"{two_point_dir}/sim_{sim_i}/ratios_res_{res_i}_mass_{mass_bin_i}")
 
                         bi_spec_ratio_ax.axhline(0, linewidth=.5, linestyle='--', color='black')
                         scale_info_text = bi_spec_ratio_ax.text(0.05, 0.1, '', transform=bi_spec_ratio_ax.transAxes)
@@ -375,7 +375,7 @@ def plot_power_and_bi_spectrum(bias_model_list: Sequence[BiasModelData], params,
                                         legend_elements_ratio_bi_spec, (None, None), (-0.4, 0.4), mass_lo_hi)
 
                         bi_spec_ratio_fig.savefig(
-                            f"{three_point_dir}/sim_{sim_i}/ratios_res_{res_i}_mass_{mass_bin_i}.png")
+                            f"{three_point_dir}/sim_{sim_i}/ratios_res_{res_i}_mass_{mass_bin_i}")
 
                     plt.close(power_spec_fig)
                     plt.close(cross_correlation_fig)
