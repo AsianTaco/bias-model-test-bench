@@ -3,6 +3,7 @@ import numpy as np
 
 from bias_bench.constants import capital_rockstar_columns
 
+
 def convert_dataframe_catalog_to_numpy(dataframe_cat):
     numpy_halo_cat = np.empty(dataframe_cat.index.size,
                               dtype=[('x', '<f8'), ('y', '<f8'), ('z', '<f8'), ('mvir', '<f8')])
