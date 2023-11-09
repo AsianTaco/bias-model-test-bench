@@ -1,7 +1,7 @@
 num_bias_models: 1
 
 bias_model_1:
-  hdf5_file_path: bias_challenge/data/data.hdf5
+  hdf5_file_path: data/bias_challenge/data.hdf5
   simulation_group_name: aquila_bias_challenge_training
   n_simulations: 1
   n_res: 1

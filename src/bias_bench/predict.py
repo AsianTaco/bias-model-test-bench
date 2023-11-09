@@ -8,8 +8,7 @@ from bias_bench.utils import bias_bench_print
 import numpy as np
 
 
-def predict_galaxy_counts(bias_model_data: BiasModelData, bias_params: BiasParams,
-                          which_model=1):
+def predict_galaxy_counts(bias_model_data: BiasModelData, bias_params: BiasParams, which_model=1):
     """ Predict ngal from density field. """
 
     params = bias_params.data
