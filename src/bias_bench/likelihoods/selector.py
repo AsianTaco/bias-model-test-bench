@@ -1,8 +1,8 @@
-from bias_bench.likelihoods.NegativeBinomial import NegativeBinomial
-from bias_bench.likelihoods.Poisson import Poisson
-from bias_bench.likelihoods.Gaussian import Gaussian
-from bias_bench.likelihoods.LogNormal import LogNormal
-from bias_bench.likelihoods.LogSkewNormal import LogSkewNormal
+from .NegativeBinomial import NegativeBinomial
+from .Poisson import Poisson
+from .Gaussian import Gaussian
+from .LogNormal import LogNormal
+from .LogSkewNormal import LogSkewNormal
 
 
 def select_likelihood(likelihood_name):
