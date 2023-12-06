@@ -1,1 +1,1 @@
-import Gaussian
+from bias_bench.likelihoods import *
