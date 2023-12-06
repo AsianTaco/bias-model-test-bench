@@ -38,7 +38,7 @@ def plot_one_point_stats(bias_model_list: Sequence[BiasModelData], params, paren
             for res_i in range(bias_model_data.n_res):
                 for mass_bin_i in range(bias_model_data.n_mass_bins):
                     # FIXME: better ratio setting
-                    fig, axs = plt.subplots(2, figsize=(5, 9), dpi=200)
+                    fig, axs = plt.subplots(2)
 
                     dm_overdensity_flat = bias_model_data.dm_overdensity_fields[sim_i][res_i].flatten()
                     log_dm_overdensity_flat = np.log10(
