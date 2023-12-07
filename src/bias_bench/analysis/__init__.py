@@ -1,4 +1,3 @@
-from bias_bench.analysis.field_plots import plot_density_field
-
-from bias_bench.analysis.one_point import plot_one_point_stats
-from bias_bench.analysis.two_point import plot_power_and_bi_spectrum
+from .field_plots import plot_density_field
+from .one_point import plot_one_point_stats
+from .two_point import plot_power_and_bi_spectrum

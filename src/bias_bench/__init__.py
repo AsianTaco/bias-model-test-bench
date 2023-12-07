@@ -9,4 +9,4 @@ __version__ = metadata.version("bias_bench")
 
 from bias_bench.processing import *
 from bias_bench.utils import *
-from bias_bench import likelihoods, optimizer, benchmark_models
+from bias_bench import likelihoods, optimizer, benchmark_models, analysis
