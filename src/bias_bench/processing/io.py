@@ -35,6 +35,7 @@ def read_rockstar_ascii_cat(cat_paths, mass_threshold, capital_id=False, convert
         # TODO: bypass this way of hard coding the header columns as constants
         header_names = capital_rockstar_columns
         header_line = 0 if infer_header else None
+        # FIXME: passing heading names messes up headers with inferred column names
         halo_cat = pd.read_csv(cat_path, sep=' ', comment='#', names=header_names, header=header_line)
         reduced_cat = extract_halo_cat_with_mass_threshold(halo_cat, mass_threshold, capital_id, convert_to_numpy)
         reduced_cats.append(reduced_cat)

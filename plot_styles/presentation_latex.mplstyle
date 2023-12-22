@@ -5,10 +5,10 @@
 axes.prop_cycle : (cycler('color', ['k', 'r', 'b', 'g']) + cycler('ls', ['-', '--', ':', '-.']))
 
 # Set default figure size
-figure.figsize : 10, 4
+figure.figsize : 12.8, 9.6
 
 # Font settings
-font.size : 14
+font.size : 20
 font.family : Computer Modern Roman
 
 # Always save as 'tight'

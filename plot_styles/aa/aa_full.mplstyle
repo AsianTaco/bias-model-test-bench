@@ -2,14 +2,14 @@
 # Please use lower case for any words in figures to comply with the A&A style.
 
 # Figure size
-figure.figsize : 7, 5.25 # full width figure max. 180mm
+figure.figsize : 7.087, 5.25 # full width figure max. 180mm
 
 # Font sizes
-axes.labelsize: 7
-xtick.labelsize: 7
-ytick.labelsize: 7
-legend.fontsize: 7
-font.size: 7
+axes.labelsize: 11
+xtick.labelsize: 11
+ytick.labelsize: 11
+legend.fontsize: 11
+font.size: 11
 
 # Font Family
 font.family: Computer Modern Roman

@@ -21,7 +21,7 @@ requires-python = ">=3.7, <=3.11"
 dependencies = [
     "h5py",
     "numpy == 1.23.3",
-    "matplotlib",
+    "matplotlib >= 3.6",
     "pandas",
     "numba",
     "scipy",
