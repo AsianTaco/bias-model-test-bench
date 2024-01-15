@@ -20,13 +20,13 @@ keywords = ['galaxy bias', 'testbench', 'simulations', 'python']
 requires-python = ">=3.7, <=3.11"
 dependencies = [
     "h5py",
-    "numpy == 1.23.3",
+    "numpy >= 1.23.3",
     "matplotlib >= 3.6",
     "pandas",
     "numba",
     "scipy",
     "pyaml",
-    "pyfftw == 0.13",
+    "pyfftw >= 0.13",
     "pylians == 0.11",
 ]
 
