@@ -1,3 +1,5 @@
+import numpy as np
+
 from bias_bench.benchmark_models.BenchmarkModel import BenchmarkModel
 
 
@@ -9,4 +11,4 @@ class MeanPredictor(BenchmarkModel):
 
     # TODO: Extend this to be aware of the underlying overdensity
     def predict(self, delta, popt):
-        return popt
+        return np.full_like(delta, popt)
