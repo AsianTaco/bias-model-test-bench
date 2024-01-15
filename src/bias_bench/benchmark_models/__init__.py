@@ -1,1 +1,1 @@
-from . import LinearBias, TruncatedPowerLaw
+from . import LinearBias, TruncatedPowerLaw, MeanPredictor
