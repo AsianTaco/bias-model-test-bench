@@ -71,11 +71,12 @@ def compute_cross_correlation_coefficient(pred, truth, lbox, MAS):
 
 def add_plots_with_std(ax, x, mean, std, style_id=1):
     ax.loglog(x, mean, c=color_blind_safe_color_cycle[style_id], lw=1, linestyle=line_styles[style_id])
-    ax.fill_between(x, (mean - std), (mean + std), alpha=0.4, color=color_blind_safe_color_cycle[style_id])
-    ax.fill_between(x, (mean - 2 * std), (mean + 2 * std), alpha=0.2, color=color_blind_safe_color_cycle[style_id])
+    ax.fill_between(x, (mean - std), (mean + std), alpha=0.4, lw=0., color=color_blind_safe_color_cycle[style_id])
+    ax.fill_between(x, (mean - 2 * std), (mean + 2 * std), alpha=0.2, lw=0.,
+                    color=color_blind_safe_color_cycle[style_id])
 
 
-def finalise_figure(fig, ax, xlabel, ylabel, legends, xlim, ylim, mass_bins):
+def finalise_figure(fig, ax, xlabel, ylabel, legends, xlim, ylim, mass_bins, no_title=True):
     ax.legend(handles=legends)
     ax.set_xlabel(xlabel)
     ax.set_ylabel(ylabel)
@@ -91,10 +92,11 @@ def finalise_figure(fig, ax, xlabel, ylabel, legends, xlim, ylim, mass_bins):
     except IndexError:
         m_hi_str = ""
 
-    fig.suptitle('$' + m_lo_str + r"\leq M_{\mathrm{vir}} [M_\odot]" + m_hi_str + '$')
+    if not no_title:
+        fig.suptitle('$' + m_lo_str + r"\leq M_{\mathrm{vir}} [M_\odot]" + m_hi_str + '$')
 
 
-def plot_power_and_bi_spectrum(bias_model_list: Sequence[BiasModelData], params, parent_folder_path):
+def plot_power_and_bi_spectrum(bias_model_list: Sequence[BiasModelData], params, parent_folder_path, no_title=False):
     # power-spectrum parameters
     show_density = params['power_spectrum']['show_density']
     MAS = params['power_spectrum']['MAS']
@@ -222,10 +224,10 @@ def plot_power_and_bi_spectrum(bias_model_list: Sequence[BiasModelData], params,
                                                          c=color_blind_safe_color_cycle[prediction_style_id], lw=1,
                                                          linestyle=line_styles[ratio_line_style_id])
                             power_spec_ratio_ax.fill_between(power_spec_truth.k, (mean_ratio - std_power_ratio),
-                                                             (mean_ratio + std_power_ratio), alpha=0.4,
+                                                             (mean_ratio + std_power_ratio), alpha=0.4, lw=0.,
                                                              color=color_blind_safe_color_cycle[prediction_style_id])
                             power_spec_ratio_ax.fill_between(power_spec_truth.k, (mean_ratio - 2 * std_power_ratio),
-                                                             (mean_ratio + 2 * std_power_ratio), alpha=0.2,
+                                                             (mean_ratio + 2 * std_power_ratio), alpha=0.2, lw=0.,
                                                              color=color_blind_safe_color_cycle[prediction_style_id])
                             # power_spec_ax.fill_between(k_counts, - std_power/ mean_power,
                             #                 std_power/ mean_power, alpha=0.2,
@@ -271,11 +273,11 @@ def plot_power_and_bi_spectrum(bias_model_list: Sequence[BiasModelData], params,
                                                       c=color_blind_safe_color_cycle[prediction_style_id], lw=1,
                                                       linestyle=line_styles[ratio_line_style_id])
                             bi_spec_ratio_ax.fill_between(bi_spec_truth.theta, (mean_bispec_ratio - std_bi_spec_ratio),
-                                                          (mean_bispec_ratio + std_bi_spec_ratio), alpha=0.4,
+                                                          (mean_bispec_ratio + std_bi_spec_ratio), alpha=0.4, lw=0.,
                                                           color=color_blind_safe_color_cycle[prediction_style_id])
                             bi_spec_ratio_ax.fill_between(bi_spec_truth.theta,
                                                           (mean_bispec_ratio - 2 * std_bi_spec_ratio),
-                                                          (mean_bispec_ratio + 2 * std_bi_spec_ratio), alpha=0.2,
+                                                          (mean_bispec_ratio + 2 * std_bi_spec_ratio), alpha=0.2, lw=0.,
                                                           color=color_blind_safe_color_cycle[prediction_style_id])
 
                             # power_spec_ax.fill_between(k_counts, - std_power/ mean_power,
@@ -347,15 +349,11 @@ def plot_power_and_bi_spectrum(bias_model_list: Sequence[BiasModelData], params,
 
                     power_spec_fig.savefig(f"{two_point_dir}/sim_{sim_i}/res_{res_i}_mass_{mass_bin_i}")
 
-                    cross_correlation_ax.legend(handles=legend_elements_power_spec, fancybox=True, shadow=True)
-                    cross_correlation_ax.set_xlabel(r"$k$ [$h \ \mathrm{Mpc}^{-1}$]")
-                    cross_correlation_ax.set_ylabel(r"$P(k)$ [$h^{-3}\mathrm{Mpc}^3$]")
-                    cross_correlation_ax.set_xlim(2e-2, nyquist_freq)
-                    cross_correlation_ax.set_ylim(bottom=.5)
+                    finalise_figure(cross_correlation_fig, cross_correlation_ax,
+                                    r"$k$ [$h \ \mathrm{Mpc}^{-1}$]",
+                                    r"$P(k)$ [$h^{-3}\mathrm{Mpc}^3$]",
+                                    legend_elements_power_spec, (2e-2, nyquist_freq), (.5, None), mass_lo_hi)
 
-                    cross_correlation_fig.suptitle(f'Cross correlation'
-                                                   f' (${mass_lo_hi[0]} M_\\odot < M_h <{mass_lo_hi[1]} M_\\odot$)')
-                    cross_correlation_fig.tight_layout(rect=[0, 0.03, 1, 0.95])
                     cross_correlation_fig.savefig(
                         f"{two_point_dir}/sim_{sim_i}/cross_res_{res_i}_mass_{mass_bin_i}")
 
