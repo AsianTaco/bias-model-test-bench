@@ -22,12 +22,13 @@ dependencies = [
     "h5py",
     "numpy >= 1.23.3",
     "matplotlib >= 3.6",
-    "pandas",
+    "pandas >= 2.1.4",
     "numba",
     "scipy",
     "pyaml",
     "pyfftw >= 0.13",
     "pylians == 0.11",
+    "emcee >= 3.1.4",
 ]
 
 [project.urls]
@@ -42,5 +43,6 @@ notebook = ['jupyter']
 
 [project.scripts]
 galaxy-bias-benchmark = "bias_bench.console_scripts:run_test_bench"
+visualise-data = "bias_bench.console_scripts:visualise_data"
 optimise_borg_bias = "bias_bench.console_scripts:optimise_borg_bias"
 bundle_catalogs = "bias_bench.console_scripts:bundle_catalogs"
