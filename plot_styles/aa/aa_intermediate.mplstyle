@@ -5,14 +5,14 @@
 figure.figsize : 4.724, 2.79 # intermediate width figure max. 120mm
 
 # Font sizes
-axes.labelsize: 11
-xtick.labelsize: 11
-ytick.labelsize: 11
-legend.fontsize: 11
-font.size: 11
+axes.labelsize: 10
+xtick.labelsize: 10
+ytick.labelsize: 10
+legend.fontsize: 10
+font.size: 10
 
 # Font Family
-font.family: Computer Modern Roman
+font.family: txfonts
 
 # Set line widths
 axes.linewidth : 0.5
@@ -27,4 +27,4 @@ savefig.pad_inches : 0.02  # Use virtually all space when we specify figure dime
 
 # LaTeX packages
 text.usetex: True
-text.latex.preamble : \usepackage{amsmath} \usepackage{amssymb} \usepackage{sfmath}
+text.latex.preamble : \usepackage{amsmath} \usepackage{amssymb} \usepackage{sfmath} \usepackage[varg]{txfonts}

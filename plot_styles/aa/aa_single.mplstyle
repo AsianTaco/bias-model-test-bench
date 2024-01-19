@@ -2,17 +2,17 @@
 # Please use lower case for any words in figures to comply with the A&A style.
 
 # Figure size
-figure.figsize : 3.465, 2.55  # max width is 88mm
+figure.figsize : 3.46457, 3.46457  # max width is 88mm
 
 # Font sizes
-axes.labelsize: 11
-xtick.labelsize: 11
-ytick.labelsize: 11
-legend.fontsize: 11
-font.size: 11
+axes.labelsize: 10
+xtick.labelsize: 10
+ytick.labelsize: 10
+legend.fontsize: 10
+font.size: 10
 
 # Font Family
-font.family: Computer Modern Roman
+font.family: txfonts
 
 # Set line widths
 axes.linewidth : 0.5
@@ -27,7 +27,7 @@ savefig.pad_inches: 0.02  # Use virtually all space when we specify figure dimen
 
 # LaTeX packages
 text.usetex: True
-text.latex.preamble : \usepackage{amsmath} \usepackage{amssymb} \usepackage{sfmath}
+text.latex.preamble : \usepackage{amsmath} \usepackage{amssymb} \usepackage{sfmath} \usepackage[varg]{txfonts}
 
 legend.fancybox: True
 legend.shadow: False
