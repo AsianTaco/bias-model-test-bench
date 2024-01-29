@@ -6,7 +6,7 @@ class TruncatedPowerLaw(BenchmarkModel):
 
     def __init__(self):
         super().__init__("Truncated Power Law", 4)
-        self.bounds = [(1., 1e8), (1e-6, 6.), (1e-6, 3.), (1e-6, 1e5)]
+        self.bounds = [(1e-6, 1e8), (1e-6, 6.), (1e-6, 3.), (1e-6, 1e5)]
 
     def get_mean_ngal(self, delta_m, nmean, beta, epsilon_g, rho_g):
         """
