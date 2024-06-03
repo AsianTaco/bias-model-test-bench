@@ -32,13 +32,15 @@ class EMCEESampler(BaseOptimizer):
         # Run the MCMC sampling
         sampler.run_mcmc(p0, self.n_steps, progress=True)
         samples = sampler.get_chain(discard=self.n_discard)
+        log_probs = sampler.get_log_prob(discard=self.n_discard)
 
         # TODO: not just return the sampled posterior mean
-        return np.mean(samples[:, :, :], axis=(0, 1))
+        return samples, log_probs
 
     def optimize(self, input_x, data, init_params):
-        res = self.sample(input_x, data, init_params)
+        samples, log_probs = self.sample(input_x, data, init_params)
+        res = np.mean(samples[:, :, :], axis=(0, 1))
 
         likelihood_params = res[:self.like.n_params]
         bias_params = res[-self.model.n_params:]
-        return likelihood_params, bias_params
+        return likelihood_params, bias_params, log_probs, samples

@@ -53,7 +53,7 @@ def predict_galaxy_counts(bias_model_data: BiasModelData, bias_params: BiasParam
 
             # Fit ngal vs delta relation.
             bias_bench_print(f"Fitting {benchmark_model.name} for res_{res_i}, mass_bin_{mass_bin_i}", verbose=True)
-            fitted_lh_params, fitted_benchmark_model_params = optimizer.optimize(overdensities, counts_fields_truth,
+            fitted_lh_params, fitted_benchmark_model_params, *_ = optimizer.optimize(overdensities, counts_fields_truth,
                                                                                  init_params)
 
             if (fitted_lh_params is None) and (fitted_benchmark_model_params is None):

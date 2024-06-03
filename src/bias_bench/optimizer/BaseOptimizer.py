@@ -5,7 +5,7 @@ from bias_bench.benchmark_models.BenchmarkModel import BenchmarkModel
 from bias_bench.likelihoods.DataLikelihood import DataLikelihood
 
 # TODO: Create better typing for this
-TargetParameters = namedtuple('TargetParameters', 'likelihood_params bias_params')
+TargetParameters = namedtuple('TargetParameters', 'likelihood_params bias_params auxiliaries')
 
 
 class BaseOptimizer(ABC):
@@ -28,6 +28,6 @@ class BaseOptimizer(ABC):
         Returns
         -------
         TargetParameters
-            A set of optimized parameters. The first entry are the likelihood parameters and the second entry the bias model parameters
+            A set of optimized parameters. The first entry are the likelihood parameters, the second entry the bias model parameters, followed by a dynamic number of auxiliary outputs depeding on the optimiser
         """
         pass
