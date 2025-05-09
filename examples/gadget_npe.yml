@@ -1,0 +1,34 @@
+num_bias_models: 1
+
+bias_model_1:
+  hdf5_file_path: /home/sding/PhD/codes/npe/out/500mpc_512part/model_iteration_4/mesh_128/gadget_npe.hdf5
+  simulation_group_name: gadget
+  n_simulations: 1
+  n_res: 1
+  n_mass_bins: 2
+
+  predict_counts_model: truncated_power_law
+  name: 'NPE'
+
+plots:
+  - power_spectrum
+  - bi_spectrum
+  - ngal_vs_rho
+  - density_images
+
+out_dir: /home/sding/PhD/codes/npe/out/500mpc_512part/model_iteration_4/mesh_128
+
+one_point:
+  x_lim: [-0.5, 3]
+  y_lim: [-0.5, 5]
+
+power_spectrum:
+  show_density: false
+  MAS:
+
+bi_spectrum:
+  show_density: false
+  k1: 0.5
+  k2: 0.6
+  Ntheta: 25
+  MAS:
