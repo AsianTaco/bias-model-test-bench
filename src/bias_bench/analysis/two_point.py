@@ -12,11 +12,14 @@ from bias_bench.utils import setup_plotting_folders
 
 PowerSpectrum = namedtuple("PowerSpectrum", "k power")
 BiSpectrum = namedtuple("BiSpectrum", "theta bispectrum reduced_bispectrum")
-
+# TODO: introduce matplotlib color cycler
 line_styles = ['-', '--', ':', '-.']
 # Color cycle taken from:
 # Wong, B. Points of view: Color blindness. Nat Methods 8, 441 (2011). https://doi.org/10.1038/nmeth.1618
-color_blind_safe_color_cycle = ['#000000', '#D55E00', '#0072B2', '#E69F00', '#56B4E9', '#009E73', '#F0E442', '#CC79A7']
+# color_blind_safe_color_cycle = ['#000000', '#D55E00', '#0072B2', '#E69F00', '#56B4E9', '#009E73', '#F0E442', '#CC79A7']
+
+color_blind_safe_color_cycle = ['#011959', '#3C6D56', '#FDB7BC', '#103F60', '#1C5A62', '#687B3E', '#9D892B', '#D29343',
+                                '#F8A17B', '#FACCFA']
 
 ground_truth_style_id = 0
 prediction_style_id = 1
@@ -40,7 +43,7 @@ def compute_summaries(field, Lbox, k1, k2, Ntheta, MAS):
     theta = np.linspace(0, np.pi, Ntheta)
 
     k, pk = compute_power_spectrum(field, Lbox, MAS)
-    bbk = PKL.Bk(field, Lbox, k1=k1, k2=k2, theta=theta, MAS=MAS)
+    bbk = PKL.Bk(field, Lbox, k1=k1, k2=k2, theta=theta, MAS=MAS, verbose=False)
 
     power_spectrum = PowerSpectrum(k, pk)
     bispectrum = BiSpectrum(theta, bbk.B, bbk.Q)
@@ -69,11 +72,17 @@ def compute_cross_correlation_coefficient(pred, truth, lbox, MAS):
     return pk.k3D, r_c
 
 
-def add_plots_with_std(ax, x, mean, std, style_id=1):
-    ax.loglog(x, mean, c=color_blind_safe_color_cycle[style_id], lw=1, linestyle=line_styles[style_id])
+def add_plots_with_std(ax, x, mean, std, log_scale=(True, True), style_id=1):
+    xlog, ylog = log_scale
+    ax.plot(x, mean, c=color_blind_safe_color_cycle[style_id], lw=1, linestyle=line_styles[style_id])
     ax.fill_between(x, (mean - std), (mean + std), alpha=0.4, lw=0., color=color_blind_safe_color_cycle[style_id])
     ax.fill_between(x, (mean - 2 * std), (mean + 2 * std), alpha=0.2, lw=0.,
                     color=color_blind_safe_color_cycle[style_id])
+
+    if xlog:
+        ax.set_xscale('log')
+    if ylog:
+        ax.set_yscale('log')
 
 
 def finalise_figure(fig, ax, xlabel, ylabel, legends, xlim, ylim, mass_bins, no_title=True):
@@ -94,6 +103,24 @@ def finalise_figure(fig, ax, xlabel, ylabel, legends, xlim, ylim, mass_bins, no_
 
     if not no_title:
         fig.suptitle('$' + m_lo_str + r"\leq M_{\mathrm{vir}} [M_\odot]" + m_hi_str + '$')
+
+
+def get_overdensity_field(model_data, field_name, res_i, sim_i, mass_bin_i):
+    try:
+        match field_name:
+            case 'truth':
+                overdensity = compute_overdensity(model_data.count_fields_truth[sim_i][res_i][mass_bin_i])
+                return True, overdensity
+            case 'prediction':
+                overdensity = compute_overdensity(model_data.count_fields_predicted[sim_i][res_i][mass_bin_i])
+                return True, overdensity
+            case 'benchmark':
+                overdensity = compute_overdensity(model_data.counts_field_benchmark[sim_i][res_i][mass_bin_i])
+                return True, overdensity
+
+    except IndexError:
+        print(f"No {field_name} count field found in BiasModelData. Skipping plots.")
+        return False, None
 
 
 def plot_power_and_bi_spectrum(bias_model_list: Sequence[BiasModelData], params, parent_folder_path, no_title=False):
@@ -127,32 +154,25 @@ def plot_power_and_bi_spectrum(bias_model_list: Sequence[BiasModelData], params,
                 k_min = 2 * np.pi / box
 
                 for mass_bin_i in range(bias_model_data.n_mass_bins):
+                    # Setting figs, axs for 2pt statistic plots
                     power_spec_fig, power_spec_ax = plt.subplots()
                     cross_correlation_fig, cross_correlation_ax = plt.subplots()
                     power_spec_ratio_fig, power_spec_ratio_ax = plt.subplots()
-
                     legend_elements_power_spec = []
+                    legend_elements_cross_correlation = []
                     legend_elements_power_spec_ratio = []
 
+                    # Setting figs, axs for 3pt statistic plots
                     bi_spec_fig, bi_spec_ax = plt.subplots()
                     bi_spec_ratio_fig, bi_spec_ratio_ax = plt.subplots()
                     reduced_bi_spec_fig, reduced_bi_spec_ax = plt.subplots()
-
                     legend_elements_bi_spec = []
                     legend_elements_ratio_bi_spec = []
 
-                    ground_truth_field_exists = False
+                    ground_truth_field_exists, count_overdensity_truth = get_overdensity_field(bias_model_data, 'truth',
+                                                                                               sim_i, res_i, mass_bin_i)
 
-                    if show_density:
-                        overdensity_field = bias_model_data.dm_overdensity_fields[sim_i][res_i][mass_bin_i]
-                        power_spec_density, bi_spec_density = compute_summaries(overdensity_field, box, k1, k2, Ntheta,
-                                                                                MAS)
-                        power_spec_ax.loglog(power_spec_density.k, power_spec_density.power, label="$\delta_m$")
-                        bi_spec_ax.loglog(bi_spec_density.theta, bi_spec_density.bispectrum, label="$\delta_m$")
-
-                    try:
-                        count_field_truth = bias_model_data.count_fields_truth[sim_i][res_i][mass_bin_i]
-                        count_overdensity_truth = compute_overdensity(count_field_truth)
+                    if ground_truth_field_exists:
                         power_spec_truth, bi_spec_truth = compute_summaries(count_overdensity_truth, box, k1, k2,
                                                                             Ntheta, MAS)
 
@@ -161,15 +181,18 @@ def plot_power_and_bi_spectrum(bias_model_list: Sequence[BiasModelData], params,
                                              ls=line_styles[ground_truth_style_id])
                         legend_elements_power_spec.append(ground_truth_legend)
 
-                        bi_spec_ax.loglog(bi_spec_truth.theta, bi_spec_truth.bispectrum,
-                                          c=color_blind_safe_color_cycle[ground_truth_style_id],
-                                          ls=line_styles[ground_truth_style_id])
+                        bi_spec_ax.semilogy(bi_spec_truth.theta / np.pi, bi_spec_truth.bispectrum,
+                                            c=color_blind_safe_color_cycle[ground_truth_style_id],
+                                            ls=line_styles[ground_truth_style_id])
                         legend_elements_bi_spec.append(ground_truth_legend)
 
-                        ground_truth_field_exists = True
-
-                    except IndexError:
-                        print("No ground truth count field found in BiasModelData. Skipping plots")
+                    if show_density:
+                        overdensity_field = bias_model_data.dm_overdensity_fields[sim_i][res_i][mass_bin_i]
+                        power_spec_density, bi_spec_density = compute_summaries(overdensity_field, box, k1, k2, Ntheta,
+                                                                                MAS)
+                        power_spec_ax.loglog(power_spec_density.k, power_spec_density.power, label="$\delta_m$")
+                        bi_spec_ax.semilogy(bi_spec_density.theta / np.pi, bi_spec_density.bispectrum,
+                                            label="$\delta_m$")
 
                     try:
                         count_field = bias_model_data.count_fields_predicted[sim_i][res_i][mass_bin_i]
@@ -202,8 +225,8 @@ def plot_power_and_bi_spectrum(bias_model_list: Sequence[BiasModelData], params,
                         mean_bi_spec = bi_spec.mean(axis=0)
                         std_bi_spec = bi_spec.std(axis=0)
 
-                        add_plots_with_std(bi_spec_ax, bi_spec_counts.theta, mean_bi_spec, std_bi_spec,
-                                           style_id=prediction_style_id)
+                        add_plots_with_std(bi_spec_ax, bi_spec_counts.theta / np.pi, mean_bi_spec, std_bi_spec,
+                                           style_id=prediction_style_id, log_scale=(False, True))
                         legend_elements_bi_spec.append(prediction_mean_legend)
 
                         if ground_truth_field_exists:
@@ -255,6 +278,13 @@ def plot_power_and_bi_spectrum(bias_model_list: Sequence[BiasModelData], params,
                                                           c=color_blind_safe_color_cycle[prediction_style_id], lw=1,
                                                           linestyle=line_styles[prediction_style_id])
 
+                            legend_elements_cross_correlation.append(
+                                Line2D([0], [0], color=color_blind_safe_color_cycle[prediction_style_id],
+                                       lw=1, linestyle=line_styles[ratio_line_style_id], label=f'mean'))
+                            legend_elements_cross_correlation.append(
+                                Line2D([0], [0], color='grey',
+                                       lw=1, linestyle='-', label=f'samples'))
+
                             # Bispectrum ratios
                             mean_bispec_ratio = (mean_bi_spec / bi_spec_truth.bispectrum) - 1
 
@@ -269,13 +299,14 @@ def plot_power_and_bi_spectrum(bias_model_list: Sequence[BiasModelData], params,
                             bi_spec_ratios = np.array(bi_spec_ratios)
                             std_bi_spec_ratio = bi_spec_ratios.std(axis=0)
 
-                            bi_spec_ratio_ax.semilogx(bi_spec_truth.theta, mean_bispec_ratio,
-                                                      c=color_blind_safe_color_cycle[prediction_style_id], lw=1,
-                                                      linestyle=line_styles[ratio_line_style_id])
-                            bi_spec_ratio_ax.fill_between(bi_spec_truth.theta, (mean_bispec_ratio - std_bi_spec_ratio),
+                            bi_spec_ratio_ax.plot(bi_spec_truth.theta / np.pi, mean_bispec_ratio,
+                                                  c=color_blind_safe_color_cycle[prediction_style_id], lw=1,
+                                                  linestyle=line_styles[ratio_line_style_id])
+                            bi_spec_ratio_ax.fill_between(bi_spec_truth.theta / np.pi,
+                                                          (mean_bispec_ratio - std_bi_spec_ratio),
                                                           (mean_bispec_ratio + std_bi_spec_ratio), alpha=0.4, lw=0.,
                                                           color=color_blind_safe_color_cycle[prediction_style_id])
-                            bi_spec_ratio_ax.fill_between(bi_spec_truth.theta,
+                            bi_spec_ratio_ax.fill_between(bi_spec_truth.theta / np.pi,
                                                           (mean_bispec_ratio - 2 * std_bi_spec_ratio),
                                                           (mean_bispec_ratio + 2 * std_bi_spec_ratio), alpha=0.2, lw=0.,
                                                           color=color_blind_safe_color_cycle[prediction_style_id])
@@ -305,9 +336,9 @@ def plot_power_and_bi_spectrum(bias_model_list: Sequence[BiasModelData], params,
                                    linestyle=line_styles[benchmark_style_id],
                                    label=f'benchmark ({benchmark_model_name})'))
 
-                        bi_spec_ax.loglog(bi_spec_benchmark.theta, bi_spec_benchmark.bispectrum,
-                                          color=color_blind_safe_color_cycle[benchmark_style_id], lw=1,
-                                          linestyle=line_styles[benchmark_style_id])
+                        bi_spec_ax.semilogy(bi_spec_benchmark.theta / np.pi, bi_spec_benchmark.bispectrum,
+                                            color=color_blind_safe_color_cycle[benchmark_style_id], lw=1,
+                                            linestyle=line_styles[benchmark_style_id])
                         legend_elements_bi_spec.append(
                             Line2D([0], [0], color=color_blind_safe_color_cycle[benchmark_style_id], lw=1,
                                    linestyle=line_styles[benchmark_style_id],
@@ -325,11 +356,11 @@ def plot_power_and_bi_spectrum(bias_model_list: Sequence[BiasModelData], params,
                                        linestyle=line_styles[benchmark_ratio_line_style_id],
                                        label=f'benchmark ({benchmark_model_name})'))
 
-                            bi_spec_ratio_ax.semilogx(bi_spec_truth.theta,
-                                                      bi_spec_benchmark.bispectrum / bi_spec_truth.bispectrum - 1,
-                                                      c=color_blind_safe_color_cycle[benchmark_style_id],
-                                                      lw=1,
-                                                      linestyle=line_styles[benchmark_ratio_line_style_id])
+                            bi_spec_ratio_ax.plot(bi_spec_truth.theta / np.pi,
+                                                  bi_spec_benchmark.bispectrum / bi_spec_truth.bispectrum - 1,
+                                                  c=color_blind_safe_color_cycle[benchmark_style_id],
+                                                  lw=1,
+                                                  linestyle=line_styles[benchmark_ratio_line_style_id])
                             legend_elements_ratio_bi_spec.append(
                                 Line2D([0], [0], color=color_blind_safe_color_cycle[benchmark_style_id], lw=1,
                                        linestyle=line_styles[benchmark_ratio_line_style_id],
@@ -343,31 +374,31 @@ def plot_power_and_bi_spectrum(bias_model_list: Sequence[BiasModelData], params,
                     mass_lo_hi = ['{:.0e}'.format(n).split('e+') for n in field_attrs[f'mass_bin_{mass_bin_i}']]
 
                     finalise_figure(power_spec_fig, power_spec_ax,
-                                    r"$k$ [$h \ \mathrm{Mpc}^{-1}$]",
-                                    r"$P(k)$ [$h^{-3}\mathrm{Mpc}^3$]",
+                                    r"$k$ [$h\,\mathrm{Mpc}^{-1}$]",
+                                    r"$P(k)$ [$h^{-3}\,\mathrm{Mpc}^3$]",
                                     legend_elements_power_spec, (2e-2, nyquist_freq), (1e3, None), mass_lo_hi)
 
                     power_spec_fig.savefig(f"{two_point_dir}/sim_{sim_i}/res_{res_i}_mass_{mass_bin_i}")
 
                     finalise_figure(cross_correlation_fig, cross_correlation_ax,
-                                    r"$k$ [$h \ \mathrm{Mpc}^{-1}$]",
+                                    r"$k$ [$h\,\mathrm{Mpc}^{-1}$]",
                                     r"$P(k)$ [$h^{-3}\mathrm{Mpc}^3$]",
-                                    legend_elements_power_spec, (2e-2, nyquist_freq), (.5, None), mass_lo_hi)
+                                    legend_elements_cross_correlation, (2e-2, nyquist_freq), (.5, None), mass_lo_hi)
 
                     cross_correlation_fig.savefig(
                         f"{two_point_dir}/sim_{sim_i}/cross_res_{res_i}_mass_{mass_bin_i}")
 
                     finalise_figure(bi_spec_fig, bi_spec_ax,
-                                    r"Angle $\theta$",
+                                    r"$\theta / \pi $",
                                     r"$B_{k_1, k_2}(\theta)$ [$h^{-6}\mathrm{Mpc}^6$]",
-                                    legend_elements_bi_spec, (None, None), (None, None), mass_lo_hi)
+                                    legend_elements_bi_spec, (0, 1), (None, None), mass_lo_hi)
 
                     scale_info_text = bi_spec_ax.text(0.05, 0.1, '', transform=bi_spec_ax.transAxes)
                     scale_info_text = bi_spec_ax.annotate(
-                        f"$k_1 = {k1}" + r"h \ \mathrm{Mpc}^{-1}$", xycoords=scale_info_text, xy=(0, -1.1),
+                        f"$k_1 = {k1}" + r"h\,\mathrm{Mpc}^{-1}$", xycoords=scale_info_text, xy=(0, -1.1),
                         verticalalignment="bottom")
                     bi_spec_ax.annotate(
-                        f"$k_2 = {k2}" + r"h \ \mathrm{Mpc}^{-1}$", xycoords=scale_info_text, xy=(0, -1.1),
+                        f"$k_2 = {k2}" + r"h\,\mathrm{Mpc}^{-1}$", xycoords=scale_info_text, xy=(0, -1.1),
                         verticalalignment="bottom")
 
                     # bi_spec_fig.suptitle(f'Bi-spectrum comparison for $k_1 = {k1}, k_2 = {k2}$\n'
@@ -398,9 +429,9 @@ def plot_power_and_bi_spectrum(bias_model_list: Sequence[BiasModelData], params,
                             verticalalignment="bottom")
 
                         finalise_figure(bi_spec_ratio_fig, bi_spec_ratio_ax,
-                                        r"Angle $\theta$",
+                                        r"$\theta / \pi$",
                                         r"$B(k) / B_{truth}(k) - 1$",
-                                        legend_elements_ratio_bi_spec, (None, None), (-0.4, 0.4), mass_lo_hi)
+                                        legend_elements_ratio_bi_spec, (0, 1), (-0.4, 0.4), mass_lo_hi)
 
                         bi_spec_ratio_fig.savefig(
                             f"{three_point_dir}/sim_{sim_i}/ratios_res_{res_i}_mass_{mass_bin_i}")

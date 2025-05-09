@@ -10,7 +10,7 @@ class TruncatedPowerLaw(BenchmarkModel):
 
     def get_mean_ngal(self, delta_m, nmean, beta, epsilon_g, rho_g):
         """
-        Using the truncated power law bias model (Neyrinck et al. 2014) to compute
+        Using the truncated power law bias model (Neyrinck et al. 2014) to computez
         the mean number of galaxies expected for given over-density :math:`\\delta_m`:
 
         .. math::

@@ -34,7 +34,6 @@ class EMCEESampler(BaseOptimizer):
         samples = sampler.get_chain(discard=self.n_discard)
         log_probs = sampler.get_log_prob(discard=self.n_discard)
 
-        # TODO: not just return the sampled posterior mean
         return samples, log_probs
 
     def optimize(self, input_x, data, init_params):

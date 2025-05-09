@@ -30,8 +30,6 @@ class BenchmarkModel(ABC):
         self.name = name
         self.n_params = n_params
 
-    pass
-
     def check_bounds(self, params):
         """
         Function to check that the given parameters are within the bounds of the model
@@ -59,7 +57,7 @@ class BenchmarkModel(ABC):
             lower, upper = self.bounds[idx]
 
             if param < lower or param > upper:
-                is_out_of_bounds= True
+                is_out_of_bounds = True
 
         return is_out_of_bounds
 

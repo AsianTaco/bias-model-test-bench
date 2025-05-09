@@ -34,7 +34,7 @@ def bundle_catalogs():
     mesh_size = 128
     box_size = 1000
     coords_per_mass_bin = get_halo_coords_per_mass_bin(mass_bins, cats[0])
-    halo_count_fields_per_mass_bin = [get_halo_count_field(coords_per_mass_bin[mass_bin_id], mesh_size) for
+    halo_count_fields_per_mass_bin = [get_halo_count_field(coords_per_mass_bin[mass_bin_id], mesh_size, box_size) for
                                       mass_bin_id in range(mass_bins.size - 1)]
 
     halo_count_fields_per_mass_bin = np.asarray(halo_count_fields_per_mass_bin)
@@ -142,3 +142,7 @@ def optimise_borg_bias():
     #     #     namely: - overdensity_field (3d array [Ngrid,Ngrid,Ngrid]), # dm overdensity field
     #     #             - count_field (3d array [Ngrid,Ngrid,Ngrid]),       # predicted count field
     #     #             - count_field_truth (3d array [Ngrid,Ngrid,Ngrid])  # ground truth
+
+
+if __name__ == "__main__":
+    run_test_bench()
